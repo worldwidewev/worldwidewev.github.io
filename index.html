@@ -2,6 +2,32 @@
 <html lang="en">
 	<head>
 		<title>gelatin</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta id="extViewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+<style>
+	html, body {margin: 0; padding: 0; overflow: hidden}
+</style>
+
+</head>
+<body>
+<script>
+	document.body.addEventListener('touchmove', function(event) {
+		console.log(event.source);
+		//if (event.source == document.body)
+			event.preventDefault();
+	}, false);
+
+	window.onresize = function() {
+		$(document.body).width(window.innerWidth).height(window.innerHeight);
+	}
+
+	$(function() {
+		window.onresize();
+	});
+</script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -51,24 +77,6 @@
 		<script src="js/tween.min.js"></script>
 
 		<script src='js/dat.gui.min.js'></script>
-
-		var disableScroll = false;
-var scrollPos = 0;
-function stopScroll() {
-    disableScroll = true;
-    scrollPos = $(window).scrollTop();
-}
-function enableScroll() {
-    disableScroll = false;
-}
-$(function(){
-    $(window).bind('scroll', function(){
-         if(disableScroll) $(window).scrollTop(scrollPos);
-    });
-    $(window).bind('touchmove', function(){
-         $(window).trigger('scroll');
-    });
-});
 
 	//custom shader code
 

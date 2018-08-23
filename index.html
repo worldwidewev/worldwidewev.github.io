@@ -285,12 +285,12 @@
 				var time = Date.now() * 0.00005;
 
 				TWEEN.update();
-		theta += 0.7;
+		theta += 0.5;
 	  // camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
 		// camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
 		// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-			camera.position.x += ( mouseX - camera.position.x ) * 0.25;
-			camera.position.y += ( - mouseY - camera.position.y ) * 0.25;
+			camera.position.x += ( mouseX - camera.position.x ) * 0.05;
+			camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
 		camera.lookAt( scene.position );
 
 
@@ -310,8 +310,8 @@
 
 					}
 
-					group.rotation.x += 0.01;
-					group.rotation.y += 0.02;
+					group.rotation.x += 0.0050;
+					group.rotation.y += 0.0075;
 
 				}
 

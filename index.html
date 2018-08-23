@@ -49,41 +49,60 @@
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
 		<script src="js/tween.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 
 		<script src='js/dat.gui.min.js'></script>
 
-// custom shader code
+	//custom shader code
 
 		<script id="vertexShader" type="x-shader/x-vertex">
-uniform vec3 viewVector;
-uniform float c;
-uniform float p;
-varying float intensity;
-void main()
-{
+		uniform vec3 viewVector;
+		uniform float c;
+		uniform float p;
+		varying float intensity;
+		void main()
+		{
     vec3 vNormal = normalize( normalMatrix * normal );
 	vec3 vNormel = normalize( normalMatrix * viewVector );
 	intensity = pow( c - dot(vNormal, vNormel), p );
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-}
-</script>
+	}
+	</script>
 
-// pixel shader
-<script id="fragmentShader" type="x-shader/x-vertex">
-uniform vec3 glowColor;
-varying float intensity;
-void main()
-{
+	// pixel shader
+	<script id="fragmentShader" type="x-shader/x-vertex">
+	uniform vec3 glowColor;
+	varying float intensity;
+	void main()
+	{
 	vec3 glow = glowColor * intensity;
     gl_FragColor = vec4( glow, 1.0 );
-}
-</script>
+	}
+	</script>
 
 
 		<script>
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var disableScroll = false;
+			var scrollPos = 0;
+			function stopScroll() {
+    disableScroll = true;
+    scrollPos = $(window).scrollTop();
+		}
+			function enableScroll() {
+    disableScroll = false;
+		}
+		$(function(){
+    $(window).bind('scroll', function(){
+         if(disableScroll) $(window).scrollTop(scrollPos);
+    });
+    $(window).bind('touchmove', function(){
+         $(window).trigger('scroll');
+    });
+});
 
 			var container, stats;
 			var camera, scene, group, renderer,

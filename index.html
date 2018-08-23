@@ -5,6 +5,26 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
+
+
+
+				<script>
+
+		    document.body.addEventListener('touchmove', function(event) {
+		      console.log(event.source);
+		      //if (event.source == document.body)
+		        event.preventDefault();
+		    }, false);
+
+		    window.onresize = function() {
+		      $(document.body).width(window.innerWidth).height(window.innerHeight);
+		    }
+
+		    $(function() {
+		      window.onresize();
+		    });
+
+				</script>
 			body {
 				background-color: #000000;
 				margin: 0px;
@@ -52,7 +72,7 @@
 
 		<script src='js/dat.gui.min.js'></script>
 
-	//custom shader code
+
 
 		<script id="vertexShader" type="x-shader/x-vertex">
 		uniform vec3 viewVector;
@@ -69,7 +89,7 @@
 	}
 	</script>
 
-	// pixel shader
+
 	<script id="fragmentShader" type="x-shader/x-vertex">
 	uniform vec3 glowColor;
 	varying float intensity;

@@ -46,6 +46,7 @@
 
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
+		<script src="js/tween.min.js"></script>
 
 		<script src='js/dat.gui.min.js'></script>
 
@@ -160,8 +161,7 @@
 
 				renderer.autoClear = false;
 
-				stats = new Stats();
-				container.appendChild( stats.dom );
+
 
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
@@ -185,11 +185,7 @@
 
 				};
 
-				var gui = new dat.GUI();
-				gui.add( effectController, "focus", 10.0, 3000.0, 10 ).onChange( matChanger );
-				gui.add( effectController, "aperture", 0, 10, 0.1 ).onChange( matChanger );
-				gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
-				gui.close();
+
 
 				matChanger();
 			}
@@ -270,28 +266,34 @@
 
 				requestAnimationFrame( animate, renderer.domElement );
 
-				stats.begin();
 				render();
-				stats.end();
 
 			}
+
+
+			var radius = 600;
+			var theta = 1;
 
 			function render() {
 
 				var time = Date.now() * 0.00005;
 
-				camera.position.x += ( mouseX - camera.position.x ) * 0.036;
-				camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
+				TWEEN.update();
+		theta += 0.4;
+		camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+		camera.lookAt( scene.position );
+		renderer.render( scene, camera );
 
-				camera.lookAt( scene.position );
 
 				if ( !singleMaterial ) {
 
 					for( i = 0; i < nobjects; i ++ ) {
 
 
-            materials[ i ].color.setRGB ( 255, 95, 73 );
-						materials[ i ].color.setHSL( 1, 1, 1 );
+						l = ( 360 * ( i / nobjects + time ) % 360 ) / 360;
+						materials[ i ].color.setHSL( 1, 1, l  );
 
 
 					}

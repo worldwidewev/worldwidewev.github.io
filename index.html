@@ -34,7 +34,7 @@
 
 	<body>
 		<script src="js/three.js"></script>
-
+		<script src="js/Group.js"></script>
 		<script src="js/CopyShader.js"></script>
 		<script src="js/BokehShader.js"></script>
 
@@ -56,7 +56,7 @@
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 			var container, stats;
-			var camera, scene, renderer,
+			var camera, scene, group, renderer,
 				materials = [], objects = [],
 				singleMaterial, zmaterial = [],
 				parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
@@ -83,6 +83,9 @@
 				camera.position.z = 200;
 
 				scene = new THREE.Scene();
+
+				group = new THREE.Group();
+				scene.add( group );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -143,11 +146,14 @@
 					mesh.position.set( x, y, z );
 					mesh.scale.set( s, s, s );
 
+
 					mesh.matrixAutoUpdate = false;
 					mesh.updateMatrix();
 
-					scene.add( mesh );
-					objects.push( mesh );
+					group.add( mesh );
+					scene.add( group );
+					objects.push( group );
+
 
 					count ++;
 
@@ -280,11 +286,16 @@
 
 				TWEEN.update();
 		theta += 0.7;
-		camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
-		camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
-		camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+	  // camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		// camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+		// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+			camera.position.x += ( mouseX - camera.position.x ) * 0.25;
+			camera.position.y += ( - mouseY - camera.position.y ) * 0.25;
 		camera.lookAt( scene.position );
+
+
 		renderer.render( scene, camera );
+
 
 
 				if ( !singleMaterial ) {
@@ -299,9 +310,13 @@
 
 					}
 
+					group.rotation.x += 0.01;
+					group.rotation.y += 0.02;
+
 				}
 
 				postprocessing.composer.render( 0.1 );
+
 
 			}
 

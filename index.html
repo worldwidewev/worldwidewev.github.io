@@ -34,6 +34,7 @@
 
 	<body>
 		<script src="js/three.js"></script>
+		<script src="js/bodyScrollLock.js"></script>
 		<script src="js/Group.js"></script>
 		<script src="js/CopyShader.js"></script>
 		<script src="js/BokehShader.js"></script>
@@ -107,6 +108,7 @@ void main()
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
+				document.body.ontouchmove = (e) => { e.preventDefault; return false; };
 
 				camera = new THREE.PerspectiveCamera( 70, width / height, 1, 3000 );
 				camera.position.z = 200;

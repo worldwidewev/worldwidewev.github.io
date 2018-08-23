@@ -37,6 +37,7 @@
 		<script src="js/Group.js"></script>
 		<script src="js/CopyShader.js"></script>
 		<script src="js/BokehShader.js"></script>
+		<script src="js/OrbitControls.js"></script>
 
 		<script src="js/EffectComposer.js"></script>
 		<script src="js/RenderPass.js"></script>
@@ -49,6 +50,34 @@
 		<script src="js/tween.min.js"></script>
 
 		<script src='js/dat.gui.min.js'></script>
+
+// custom shader code
+
+		<script id="vertexShader" type="x-shader/x-vertex">
+uniform vec3 viewVector;
+uniform float c;
+uniform float p;
+varying float intensity;
+void main()
+{
+    vec3 vNormal = normalize( normalMatrix * normal );
+	vec3 vNormel = normalize( normalMatrix * viewVector );
+	intensity = pow( c - dot(vNormal, vNormel), p );
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+</script>
+
+// pixel shader
+<script id="fragmentShader" type="x-shader/x-vertex">
+uniform vec3 glowColor;
+varying float intensity;
+void main()
+{
+	vec3 glow = glowColor * intensity;
+    gl_FragColor = vec4( glow, 1.0 );
+}
+</script>
 
 
 		<script>
@@ -82,6 +111,11 @@
 				camera = new THREE.PerspectiveCamera( 70, width / height, 1, 3000 );
 				camera.position.z = 200;
 
+				 controls = new THREE.OrbitControls( camera );
+
+				 controls.maxDistance = 2000;
+				 controls.minDistance = 150;
+
 				scene = new THREE.Scene();
 
 				group = new THREE.Group();
@@ -114,7 +148,7 @@
 				var start = Date.now();
 
 				var xgrid = 14,
-					ygrid = 9,
+					ygrid = 14,
 					zgrid = 14;
 
 				nobjects = xgrid * ygrid * zgrid;
@@ -151,8 +185,10 @@
 					mesh.updateMatrix();
 
 					group.add( mesh );
-					scene.add( group );
-					objects.push( group );
+
+
+								scene.add( group );
+								objects.push( group );
 
 
 					count ++;
@@ -160,6 +196,9 @@
 				}
 
 				//console.log("init time: ", Date.now() - start );
+
+
+
 
 				scene.matrixAutoUpdate = false;
 
@@ -290,13 +329,13 @@
 				var time = Date.now() * 0.00005;
 
 				TWEEN.update();
-		theta += 0.5;
+		theta += 0.2;
 	  // camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
 		// camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
 		// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-			camera.position.x += ( mouseX - camera.position.x ) * 0.05;
-			camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
-		camera.lookAt( scene.position );
+			camera.position.x += ( mouseX - camera.position.x ) * 0.005;
+			camera.position.y += ( - mouseY - camera.position.y ) * 0.005;
+		  camera.lookAt( scene.position );
 
 
 		renderer.render( scene, camera );
@@ -315,8 +354,8 @@
 
 					}
 
-					group.rotation.x += 0.0050;
-					group.rotation.y += 0.0075;
+					group.rotation.x += 0.0020;
+					group.rotation.y += 0.0015;
 
 				}
 

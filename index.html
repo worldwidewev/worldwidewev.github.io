@@ -8,9 +8,9 @@
 	<style>
 		body {
 			position: fixed !important;
-		  overflow: hidden !important;
-		  width: 100% !important;
-		  height: 100% !important;
+			overflow: hidden !important;
+			width: 100% !important;
+			height: 100% !important;
 
 
 
@@ -38,8 +38,8 @@
 			padding: 5px;
 			z-index: 100;
 			::-webkit-scrollbar {
-			  display: none;
-		}
+				display: none;
+			}
 	</style>
 </head>
 
@@ -69,10 +69,10 @@
 
 		var container, stats;
 		var camera, controls, scene, group, renderer, domElement,
-					materials = [],
-					objects = [],
-					singleMaterial, zmaterial = [],
-					parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
+			materials = [],
+			objects = [],
+			singleMaterial, zmaterial = [],
+			parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
 
 		var mouseX = 0,
 			mouseY = 0;
@@ -98,24 +98,10 @@
 			};
 
 
-//create scene
+			//create scene
 			scene = new THREE.Scene();
-//camera
-			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
-			camera.position.z = 200;
 
-			controls = new THREE.OrbitControls( camera, domElement );
-			controls = new THREE.DeviceOrientationControls( camera );
-
-			controls.maxDistance = 1500;
-			controls.minDistance = 150;
-			controls.lookSpeed = 0.1;
-
-
-//create group
-			group = new THREE.Group();
-			scene.add(group);
-//renderer
+			//renderer
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio(window.devicePixelRatio);
 			renderer.setSize(width, height);
@@ -128,7 +114,23 @@
 				path + 'py' + format, path + 'ny' + format,
 				path + 'pz' + format, path + 'nz' + format
 			];
-//reflection map
+			//camera
+			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
+			camera.position.z = 200;
+
+			controls = new THREE.OrbitControls(camera, renderer.domElement);
+			controls = new THREE.DeviceOrientationControls( camera );
+
+			controls.maxDistance = 1500;
+			controls.minDistance = 150;
+			controls.lookSpeed = 0.1;
+
+
+			//create group
+			group = new THREE.Group();
+			scene.add(group);
+
+			//reflection map
 			var textureCube = new THREE.CubeTextureLoader().load(urls);
 
 			parameters = {
@@ -140,7 +142,7 @@
 			singleMaterial = false;
 
 			if (singleMaterial) zmaterial = [cubeMaterial];
-//create spheres
+			//create spheres
 			var geo = new THREE.SphereBufferGeometry(1, 20, 10);
 
 			var start = Date.now();
@@ -337,7 +339,7 @@
 			camera.lookAt(scene.position);
 
 
-			renderer.render( scene, camera );
+			renderer.render(scene, camera);
 
 
 
@@ -353,8 +355,8 @@
 
 				}
 
-			group.rotation.x += 0.0020;
-			group.rotation.y += 0.0015;
+				group.rotation.x += 0.0020;
+				group.rotation.y += 0.0015;
 
 			}
 

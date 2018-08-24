@@ -45,6 +45,7 @@
 
 <body>
 	<script src="js/three.js"></script>
+	<script src="js/DeviceOrientationControls.js"></script>
 	<script src="js/bodyScrollLock.js"></script>
 	<script src="js/Group.js"></script>
 	<script src="js/CopyShader.js"></script>
@@ -113,6 +114,7 @@
 			camera.position.z = 200;
 
 			controls = new THREE.OrbitControls(camera);
+			controls = new THREE.DeviceOrientationControls( camera );
 
 			controls.maxDistance = 1500;
 			controls.minDistance = 150;

@@ -119,11 +119,32 @@
 			camera.position.z = 200;
 
 			controls = new THREE.OrbitControls(camera, renderer.domElement );
-			controls = new THREE.DeviceOrientationControls( camera, renderer.domElement );
+
 
 			controls.maxDistance = 1500;
 			controls.minDistance = 150;
 			controls.lookSpeed = 0.1;
+
+			controls = new THREE.DeviceOrientationControls( camera, renderer.domElement );
+
+
+			function setOrientationControls(e) {
+	// If device orientation is not available, return.
+	if (!e.alpha) {
+		return;
+	}
+
+	// Create controls for mobile.
+	controls = new THREE.DeviceOrientationControls(camera, true);
+	controls.connect();
+	controls.update();
+
+	element.addEventListener('click', fullscreen, false);
+
+	window.removeEventListener('deviceorientation', setOrientationControls, true);
+}
+window.addEventListener('deviceorientation', setOrientationControls, true);
+
 
 
 			//create group

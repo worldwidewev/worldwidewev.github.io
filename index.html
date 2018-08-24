@@ -97,6 +97,8 @@
 				return false;
 			};
 
+			scene = new THREE.Scene();
+
 			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
 			camera.position.z = 200;
 
@@ -105,11 +107,7 @@
 
 			controls.maxDistance = 1500;
 			controls.minDistance = 150;
-			//controls.lookSpeed = 0.1;
-
-
-
-			scene = new THREE.Scene();
+			controls.lookSpeed = 0.1;
 
 			group = new THREE.Group();
 			scene.add(group);

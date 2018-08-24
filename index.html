@@ -335,7 +335,7 @@
 			// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
 			// camera.position.x += (mouseX - camera.position.x) * 0.005;
 			// camera.position.y += (-mouseY - camera.position.y) * 0.005;
-			// camera.lookAt(scene.position);
+			camera.lookAt(scene.position);
 
 
 			renderer.render( scene, camera );
@@ -354,8 +354,8 @@
 
 				}
 
-			//group.rotation.x += 0.0020;
-			//	group.rotation.y += 0.0015;
+			group.rotation.x += 0.0020;
+			group.rotation.y += 0.0015;
 
 			}
 

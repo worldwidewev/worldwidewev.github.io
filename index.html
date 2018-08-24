@@ -68,7 +68,7 @@
 		if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 		var container, stats;
-		var camera, controls, scene, group, renderer,
+		var camera, scene, group, renderer,
 			materials = [],
 			objects = [],
 			singleMaterial, zmaterial = [],
@@ -98,11 +98,9 @@
 			};
 
 
-
-
-
+//create scene
 			scene = new THREE.Scene();
-
+//camera
 			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
 			camera.position.z = 200;
 
@@ -113,10 +111,10 @@
 			controls.minDistance = 150;
 			controls.lookSpeed = 0.1;
 
-
+//create group
 			group = new THREE.Group();
 			scene.add(group);
-
+//renderer
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio(window.devicePixelRatio);
 			renderer.setSize(width, height);
@@ -129,7 +127,7 @@
 				path + 'py' + format, path + 'ny' + format,
 				path + 'pz' + format, path + 'nz' + format
 			];
-
+//reflection map
 			var textureCube = new THREE.CubeTextureLoader().load(urls);
 
 			parameters = {
@@ -141,7 +139,7 @@
 			singleMaterial = false;
 
 			if (singleMaterial) zmaterial = [cubeMaterial];
-
+//create spheres
 			var geo = new THREE.SphereBufferGeometry(1, 20, 10);
 
 			var start = Date.now();

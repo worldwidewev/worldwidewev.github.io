@@ -68,11 +68,11 @@
 		if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 		var container, stats;
-		var camera, scene, group, renderer,
-			materials = [],
-			objects = [],
-			singleMaterial, zmaterial = [],
-			parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
+		var camera, controls, scene, group, renderer,
+					materials = [],
+					objects = [],
+					singleMaterial, zmaterial = [],
+					parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
 
 		var mouseX = 0,
 			mouseY = 0;
@@ -104,12 +104,13 @@
 			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
 			camera.position.z = 200;
 
-			controls = new THREE.OrbitControls( camera, renderer );
-			controls = new THREE.DeviceOrientationControls( camera );
+			controls.push(new THREE.OrbitControls( camera, renderer ));
+			controls.push(new THREE.DeviceOrientationControls( camera ));
 
 			controls.maxDistance = 1500;
 			controls.minDistance = 150;
 			controls.lookSpeed = 0.1;
+
 
 //create group
 			group = new THREE.Group();

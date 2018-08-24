@@ -7,7 +7,8 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
 		body {
-
+			position: fixed !important;
+		  overflow: hidden !important;
 		  width: 100% !important;
 		  height: 100% !important;
 
@@ -15,9 +16,9 @@
 
 			background-color: #000000;
 			margin: 0px;
-
+			overflow: hidden;
 			font-family: Monospace;
-
+			overflow: hidden !important;
 			font-size: 13px;
 			text-align: center;
 			font-weight: bold;
@@ -36,7 +37,8 @@
 			margin: 0 auto -2.1em;
 			padding: 5px;
 			z-index: 100;
-
+			::-webkit-scrollbar {
+			  display: none;
 		}
 	</style>
 </head>
@@ -103,7 +105,7 @@
 
 			controls.maxDistance = 1500;
 			controls.minDistance = 150;
-			controls.lookSpeed = 0.1;
+			//controls.lookSpeed = 0.1;
 
 
 

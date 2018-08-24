@@ -81,7 +81,7 @@
 		if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 		var container, stats;
-		var camera, scene, group, renderer,
+		var camera, controls, scene, group, renderer,
 			materials = [],
 			objects = [],
 			singleMaterial, zmaterial = [],
@@ -111,9 +111,9 @@
 			};
 
 			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
-			//camera.position.z = 200;
+			camera.position.z = 200;
 
-			//controls = new THREE.OrbitControls(camera);
+			controls = new THREE.OrbitControls(camera);
 			controls = new THREE.DeviceOrientationControls( camera );
 
 			controls.maxDistance = 1500;

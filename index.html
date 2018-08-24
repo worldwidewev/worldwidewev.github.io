@@ -97,7 +97,7 @@
 				return false;
 			};
 
-			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
+			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
 			camera.position.z = 200;
 
 			controls = new THREE.OrbitControls( camera );
@@ -351,8 +351,8 @@
 
 				}
 
-				group.rotation.x += 0.0020;
-				group.rotation.y += 0.0015;
+			//group.rotation.x += 0.0020;
+			//	group.rotation.y += 0.0015;
 
 			}
 

@@ -1,369 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<title>gelatin</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<style>
-		body {
-			position: fixed !important;
-		  overflow: hidden !important;
-		  width: 100% !important;
-		  height: 100% !important;
-
-
-
-			background-color: #000000;
-			margin: 0px;
-			overflow: hidden;
-			font-family: Monospace;
-			overflow: hidden !important;
-			font-size: 13px;
-			text-align: center;
-			font-weight: bold;
-			text-align: center;
-		}
-
-		a {
-			color: #0078ff;
-		}
-
-		#info {
-			color: #fff;
-			position: relative;
-			top: 0px;
-			width: 50em;
-			margin: 0 auto -2.1em;
-			padding: 5px;
-			z-index: 100;
-			::-webkit-scrollbar {
-			  display: none;
-		}
-	</style>
-</head>
-
-<body>
-	<script src="js/three.js"></script>
-	<script src="js/DeviceOrientationControls.js"></script>
-	<script src="js/bodyScrollLock.js"></script>
-	<script src="js/Group.js"></script>
-	<script src="js/CopyShader.js"></script>
-	<script src="js/BokehShader.js"></script>
-	<script src="js/OrbitControls.js"></script>
-	<script src="js/jquery-1.8.3.min.js"></script>
-	<script src="js/EffectComposer.js"></script>
-	<script src="js/RenderPass.js"></script>
-	<script src="js/ShaderPass.js"></script>
-	<script src="js/MaskPass.js"></script>
-	<script src="js/BokehPass.js"></script>
+<html>
+  <head>
+   <title>wev.space test environment</title>
 
-	<script src="js/Detector.js"></script>
-	<script src="js/stats.min.js"></script>
-	<script src="js/tween.min.js"></script>
+     <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100%; };
+     </style>
+  </head>
 
-	<script src='js/dat.gui.min.js'></script>
+  <body>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script> src="js/ObjectLoader.js"</script>
 
-	<script>
-		if (!Detector.webgl) Detector.addGetWebGLMessage();
+    <script>
+      var scene = new THREE.Scene( );
+      var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-		var container, stats;
-		var camera, controls, scene, group, renderer,
-			materials = [],
-			objects = [],
-			singleMaterial, zmaterial = [],
-			parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
 
-		var mouseX = 0,
-			mouseY = 0;
+      var renderer = new THREE.WebGLRenderer( );
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
 
-		var windowHalfX = window.innerWidth / 2;
-		var windowHalfY = window.innerHeight / 2;
+      window.addEventListener( 'resize', function ( )
+      {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize ( width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix( )
 
-		var width = window.innerWidth;
-		var height = window.innerHeight;
+      } );
 
-		var postprocessing = {};
+      controls = new THREE.OrbitControls( camera, renderer.domElement )
 
-		init();
-		animate();
 
-		function init() {
+      controls.minPolarAngle = 2;
+      controls.minDistance = 2;
+      controls.maxDistance = 10
 
-			container = document.createElement('div');
-			document.body.appendChild(container);
-			document.body.ontouchmove = (e) => {
-				e.preventDefault;
-				return false;
-			};
 
 
 
 
+      var geometry = new THREE.CubeGeometry ( 1000, 1000, 1000, );
+      var cubeMaterials =
+      [
+        new THREE.MeshPhongMaterial( {map: new THREE.TextureLoader( ).load( 'img/peaks_ft.png'), side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial( {map: new THREE.TextureLoader( ).load( 'img/peaks_bk.png'), side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial( {map: new THREE.TextureLoader( ).load( 'img/peaks_up.png'), side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial( {map: new THREE.TextureLoader( ).load( 'img/peaks_dn.png'), side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial( {map: new THREE.TextureLoader( ).load( 'img/peaks_rt.png'), side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial( {map: new THREE.TextureLoader( ).load( 'img/peaks_lf.png'), side: THREE.DoubleSide } )
+      ];
 
-			scene = new THREE.Scene();
+      var material = new THREE.MeshFaceMaterial( cubeMaterials );
+      var cube = new THREE.Mesh( geometry, material )
+      scene.add( cube );
 
-			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
-			camera.position.z = 200;
+// create the shape
 
-			controls = new THREE.OrbitControls( camera, renderer );
-			controls = new THREE.DeviceOrientationControls( camera );
+      var geometry = new THREE.BoxGeometry( 2, 2, 2, );
+      var cubeMaterials =
+      [
+        new THREE.MeshPhongMaterial ( { map: new THREE.TextureLoader( ).load( 'img/1.png' ), side: THREE.DoubleSide } ), //RIGHT SIDE
+        new THREE.MeshPhongMaterial ( { map: new THREE.TextureLoader( ).load( 'img/2.png' ), side: THREE.DoubleSide } ), //LEFT SIDE
+        new THREE.MeshPhongMaterial ( { map: new THREE.TextureLoader( ).load( 'img/3.png' ), side: THREE.DoubleSide } ), //TOP SIDE
+        new THREE.MeshPhongMaterial ( { map: new THREE.TextureLoader( ).load( 'img/4.png' ), side: THREE.DoubleSide } ), //BOTTOM SIDE
+        new THREE.MeshPhongMaterial ( { map: new THREE.TextureLoader( ).load( 'img/5.png' ), side: THREE.DoubleSide } ), //FRONT SIDE
+        new THREE.MeshPhongMaterial ( { map: new THREE.TextureLoader( ).load( 'img/6.png' ), side: THREE.DoubleSide } )  //BACK SIDE
 
-			controls.maxDistance = 1500;
-			controls.minDistance = 150;
-			controls.lookSpeed = 0.1;
 
+      ];
 
-			group = new THREE.Group();
-			scene.add(group);
+      //create a material color or image texture
 
-			renderer = new THREE.WebGLRenderer();
-			renderer.setPixelRatio(window.devicePixelRatio);
-			renderer.setSize(width, height);
-			container.appendChild(renderer.domElement);
+      var material = new THREE.MeshFaceMaterial( cubeMaterials );
+      var cube = new THREE.Mesh( geometry, material );
+      scene.add( cube );
 
-			var path = "img/";
-			var format = '.jpg';
-			var urls = [
-				path + 'px' + format, path + 'nx' + format,
-				path + 'py' + format, path + 'ny' + format,
-				path + 'pz' + format, path + 'nz' + format
-			];
+      camera.position.z = 5;
 
-			var textureCube = new THREE.CubeTextureLoader().load(urls);
+      var ambientLight = new THREE.AmbientLight ( 0xFFFFFF, 1.0 );
+      scene.add( ambientLight );
 
-			parameters = {
-				color: 0xff1100,
-				envMap: textureCube
-			};
-			cubeMaterial = new THREE.MeshBasicMaterial(parameters);
+      var light1 = new THREE.PointLight( 0x00D4FF, 5.0, 50 );
+      //scene.add ( light1 );
 
-			singleMaterial = false;
+      var light2 = new THREE.PointLight( 0xFFA600, 4.0, 50 );
+      //scene.add ( light2 );
 
-			if (singleMaterial) zmaterial = [cubeMaterial];
+      var light3 = new THREE.PointLight( 0xFF00D1, 6.0, 50 );
+      //scene.add ( light3 );
 
-			var geo = new THREE.SphereBufferGeometry(1, 20, 10);
+      var directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
+      directionalLight.position.set( 0, 1, 0 );
+      //scene.add( directionalLight );
 
-			var start = Date.now();
-
-			var xgrid = 14,
-				ygrid = 14,
-				zgrid = 14;
-
-			nobjects = xgrid * ygrid * zgrid;
-
-			var s = 60;
-			var count = 0;
-
-			for (i = 0; i < xgrid; i++)
-				for (j = 0; j < ygrid; j++)
-					for (k = 0; k < zgrid; k++) {
-
-						var mesh;
-
-						if (singleMaterial) {
-
-							mesh = new THREE.Mesh(geo, zmaterial);
-
-						} else {
-
-							mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(parameters));
-							materials[count] = mesh.material
-
-						}
-
-						x = 200 * (i - xgrid / 2);
-						y = 200 * (j - ygrid / 2);
-						z = 200 * (k - zgrid / 2);
-
-						mesh.position.set(x, y, z);
-						mesh.scale.set(s, s, s);
-
-
-						mesh.matrixAutoUpdate = false;
-						mesh.updateMatrix();
-
-						group.add(mesh);
-
-
-						scene.add(group);
-						objects.push(group);
-
-
-						count++;
-
-					}
-
-			//console.log("init time: ", Date.now() - start );
-
-
-
-
-			scene.matrixAutoUpdate = false;
-
-			initPostprocessing();
-
-			renderer.autoClear = false;
-
-
-
-			document.addEventListener('mousemove', onDocumentMouseMove, false);
-			document.addEventListener('touchstart', onDocumentTouchStart, false);
-			document.addEventListener('touchmove', onDocumentTouchMove, false);
-
-			document.body.addEventListener("touchmove", function(event) {
-				event.preventDefault();
-				event.stopPropagation();
-			}, false);
-
-			window.addEventListener('resize', onWindowResize, false);
-
-			var effectController = {
-
-				focus: 500.0,
-				aperture: 0.3,
-				maxblur: 0.15
-
-			};
-
-			var matChanger = function() {
-
-				postprocessing.bokeh.uniforms["focus"].value = effectController.focus;
-				postprocessing.bokeh.uniforms["aperture"].value = effectController.aperture * 0.00001;
-				postprocessing.bokeh.uniforms["maxblur"].value = effectController.maxblur;
-
-			};
-
-
-
-			matChanger();
-		}
-
-		function onDocumentMouseMove(event) {
-
-			mouseX = event.clientX - windowHalfX;
-			mouseY = event.clientY - windowHalfY;
-
-		}
-
-		function onDocumentTouchStart(event) {
-
-			if (event.touches.length == 1) {
-
-				event.preventDefault();
-
-				mouseX = event.touches[0].pageX - windowHalfX;
-				mouseY = event.touches[0].pageY - windowHalfY;
-
-			}
-		}
-
-		function onDocumentTouchMove(event) {
-
-			if (event.touches.length == 1) {
-
-				event.preventDefault();
-
-				mouseX = event.touches[0].pageX - windowHalfX;
-				mouseY = event.touches[0].pageY - windowHalfY;
-
-			}
-
-		}
-
-		function onWindowResize() {
-
-			windowHalfX = window.innerWidth / 2;
-			windowHalfY = window.innerHeight / 2;
-
-			width = window.innerWidth;
-			height = window.innerHeight;
-
-			camera.aspect = width / height;
-			camera.updateProjectionMatrix();
-
-			renderer.setSize(width, height);
-			postprocessing.composer.setSize(width, height);
-
-		}
-
-		function initPostprocessing() {
-			var renderPass = new THREE.RenderPass(scene, camera);
-
-			var bokehPass = new THREE.BokehPass(scene, camera, {
-				focus: 1.0,
-				aperture: 0.025,
-				maxblur: 1.0,
-
-				width: width,
-				height: height
-			});
-
-			bokehPass.renderToScreen = true;
-
-			var composer = new THREE.EffectComposer(renderer);
-
-			composer.addPass(renderPass);
-			composer.addPass(bokehPass);
-
-			postprocessing.composer = composer;
-			postprocessing.bokeh = bokehPass;
-
-		}
-
-		function animate() {
-
-			requestAnimationFrame(animate, renderer.domElement);
-
-
-			render();
-
-		}
-
-
-		var radius = 600;
-		var theta = 1;
-
-		function render() {
-
-			var time = Date.now() * 0.00005;
-
-			TWEEN.update();
-			theta += 0.2;
-			// camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
-			// camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
-			// camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-			// camera.position.x += (mouseX - camera.position.x) * 0.005;
-			// camera.position.y += (-mouseY - camera.position.y) * 0.005;
-			camera.lookAt(scene.position);
-
-
-			renderer.render( scene, camera );
-
-
-
-			if (!singleMaterial) {
-
-				for (i = 0; i < nobjects; i++) {
-
-
-					s = (3600 * (i / nobjects + time) % 36) / 360;
-					h = (45 * (i / nobjects + time) % 3600) / 180;
-					materials[i].color.setHSL(h, 1, 0.6);
-
-
-				}
-
-			group.rotation.x += 0.0020;
-			group.rotation.y += 0.0015;
-
-			}
-
-			postprocessing.composer.render(0.1);
-
-
-		}
-	</script>
-</body>
-
+      var spotLight = new THREE.SpotLight( 0xFFFFFF, 25);
+      spotLight.position.set( 0,  3,  0 );
+      //scene.add( spotLight );
+
+
+//game logic
+      var update = function( )
+      {
+        cube.rotation.x += 0.01
+        cube.rotation.y += 0.005
+
+        var time = Date.now( ) * 0.0005;
+
+        light1.position.x = Math.sin( time * 0.7 ) * 30;
+        light1.position.x = Math.cos( time * 0.5 ) * 40;
+        light1.position.x = Math.cos( time * 0.3 ) * 30;
+
+        light2.position.x = Math.cos( time * 0.4 ) * 30;
+        light2.position.x = Math.sin( time * 0.6 ) * 40;
+        light2.position.x = Math.sin( time * 0.2 ) * 30;
+
+        light3.position.x = Math.sin( time * 0.1 ) * 30;
+        light3.position.x = Math.cos( time * 0.4 ) * 40;
+        light3.position.x = Math.sin( time * 0.3 ) * 30;
+      };
+//draw Scene
+      var render = function( )
+      {
+        renderer.render( scene, camera );
+      };
+//run game loop (update, render, repeat)
+      var GameLoop = function( )
+      {
+        requestAnimationFrame( GameLoop );
+
+        update( );
+        render( );
+      };
+
+      GameLoop( );
+    </script>
+  </body>
 </html>

@@ -118,8 +118,8 @@
 			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
 			camera.position.z = 200;
 
-			controls = new THREE.OrbitControls(camera, renderer.domElement);
-			controls = new THREE.DeviceOrientationControls( camera );
+			controls = new THREE.OrbitControls(camera, renderer.domElement );
+			controls = new THREE.DeviceOrientationControls( camera, renderer.domElement );
 
 			controls.maxDistance = 1500;
 			controls.minDistance = 150;

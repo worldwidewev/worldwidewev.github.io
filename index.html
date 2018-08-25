@@ -6,8 +6,15 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
 			body {
+
+				position: fixed !important;
+				overflow: hidden !important;
+				width: 100% !important;
+				height: 100% !important;
+
 				color: #888888;
 				font-family:Monospace;
+				overflow: hidden !important;
 				font-size:13px;
 				background-color: #000;
 				margin: 0px;
@@ -22,6 +29,9 @@
 			}
 			a {
 				color: #00f;
+				::-webkit-scrollbar {
+					display: none;
+				}
 			}
 		</style>
 	</head>
@@ -43,7 +53,6 @@
 		<script src="js/UnrealBloomPass.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
-
 		<script>
 
 // Simple form of tiled forward lighting

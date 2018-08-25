@@ -126,6 +126,7 @@
 			controls.lookSpeed = 0.1;
 
 			controls = new THREE.DeviceOrientationControls( camera );
+			controls.update();
 
 			//create group
 			group = new THREE.Group();
@@ -349,7 +350,7 @@
 				for (i = 0; i < nobjects; i++) {
 
 
-					s = (3600 * (i / nobjects + time) % 36) / 360;
+					//s = (3600 * (i / nobjects + time) % 36) / 360;
 					h = (45 * (i / nobjects + time) % 3600) / 180;
 					materials[i].color.setHSL(h, 1, 0.6);
 

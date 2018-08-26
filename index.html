@@ -118,14 +118,14 @@
 			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
 			camera.position.z = 200;
 
-			//controls = new THREE.OrbitControls(camera, renderer.domElement );
+			controls = new THREE.OrbitControls(camera, renderer.domElement );
 
 
-			//controls.maxDistance = 1500;
-			//controls.minDistance = 200;
-			//controls.lookSpeed = 0.1;
+			controls.maxDistance = 1500;
+			controls.minDistance = 200;
+			controls.lookSpeed = 0.1;
 
-			controls = new THREE.DeviceOrientationControls( camera, renderer.domElement );
+			controls = new THREE.DeviceOrientationControls( scene, renderer.domElement );
 			controls.connect();
 
 
@@ -318,8 +318,6 @@
 		function animate() {
 
 			requestAnimationFrame(animate, renderer.domElement);
-
-			camera.position = (group.position);
 			controls.update()
 
 
@@ -335,13 +333,14 @@
 
 			var time = Date.now() * 0.00005;
 
-			camera.position.x += ( mouseX - camera.position.x ) * 0.036;
-			camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
+			//camera.position.x += ( mouseX - camera.position.x ) * 0.036;
+			//camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
 
 			TWEEN.update();
 			theta += 0.2;
 
-			//camera.lookAt(group.position);
+			camera.lookAt(scene.position);
+
 
 
 			renderer.render(scene, camera);

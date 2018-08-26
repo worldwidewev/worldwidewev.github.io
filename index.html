@@ -389,13 +389,13 @@ loader.load( 'models/w64.obj', function ( object ) {
 				//scene.add(smallSphere);
 
 				// walls
-				//var planeTop = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
-				//planeTop.position.y = 100;
-				//planeTop.rotateX( Math.PI / 2 );
-				//scene.add( planeTop );
-				//var planeBottom = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
-				//planeBottom.rotateX( - Math.PI / 2 );
-				//scene.add( planeBottom );
+				var planeTop = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+				planeTop.position.y = 100;
+				planeTop.rotateX( Math.PI / 2 );
+				scene.add( planeTop );
+				var planeBottom = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+				planeBottom.rotateX( - Math.PI / 2 );
+				scene.add( planeBottom );
 				//var planeFront = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0x7f7fff } ) );
 				//planeFront.position.z = 50;
 				//planeFront.position.y = 50;

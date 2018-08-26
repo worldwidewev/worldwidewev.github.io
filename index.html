@@ -124,6 +124,7 @@
 			controls.maxDistance = 1500;
 			controls.minDistance = 200;
 			controls.lookSpeed = 0.1;
+			controls.enablePan = false;
 
 			controls = new THREE.DeviceOrientationControls( scene, renderer.domElement );
 			controls.connect();
@@ -339,7 +340,7 @@
 			TWEEN.update();
 			theta += 0.2;
 
-			camera.lookAt(scene.position);
+			controls.target = scene.position;
 
 
 

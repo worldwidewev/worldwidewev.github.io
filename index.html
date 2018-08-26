@@ -45,7 +45,7 @@
 
 <body>
 	<script src="js/three.js"></script>
-	<script src="js/DeviceOrientationController.js"></script>
+	<script src="js/DeviceOrientationControls.js"></script>
 	<script src="js/bodyScrollLock.js"></script>
 	<script src="js/Group.js"></script>
 	<script src="js/CopyShader.js"></script>
@@ -125,7 +125,7 @@
 			controls.minDistance = 200;
 			controls.lookSpeed = 0.1;
 
-			controls = new DeviceOrientationController( camera, renderer.domElement );
+			controls = new DeviceOrientationControls( camera, renderer.domElement );
 			controls.connect();
 
 
@@ -318,6 +318,7 @@
 		function animate() {
 
 			requestAnimationFrame(animate, renderer.domElement);
+			controls.update()
 
 
 			render();

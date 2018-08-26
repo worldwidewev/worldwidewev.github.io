@@ -114,20 +114,6 @@
 				path + 'py' + format, path + 'ny' + format,
 				path + 'pz' + format, path + 'nz' + format
 			];
-			//camera
-			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
-			camera.position.z = 200;
-
-			controls = new THREE.OrbitControls(camera, renderer.domElement );
-
-
-			controls.maxDistance = 1500;
-			controls.minDistance = 200;
-			controls.lookSpeed = 0.1;
-			controls.enablePan = false;
-
-			controls = new THREE.DeviceOrientationControls( scene, renderer.domElement );
-			controls.connect();
 
 
 			//create group
@@ -205,6 +191,22 @@
 
 
 			scene.matrixAutoUpdate = false;
+
+			//camera
+			camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
+			camera.position = (mesh.position)
+
+			controls = new THREE.OrbitControls(camera, renderer.domElement );
+
+
+			controls.maxDistance = 1500;
+			controls.minDistance = 200;
+			controls.lookSpeed = 0.1;
+			controls.enablePan = false;
+
+			controls = new THREE.DeviceOrientationControls( scene, renderer.domElement );
+			controls.connect();
+
 
 			initPostprocessing();
 
@@ -319,7 +321,7 @@
 		function animate() {
 
 			requestAnimationFrame(animate, renderer.domElement);
-			controls.update()
+			//controls.update()
 
 
 			render();
@@ -340,7 +342,7 @@
 			TWEEN.update();
 			theta += 0.2;
 
-			controls.target = scene.position;
+			//controls.target = scene.position;
 
 
 

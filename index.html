@@ -318,6 +318,8 @@
 		function animate() {
 
 			requestAnimationFrame(animate, renderer.domElement);
+
+			camera.position = (group.position);
 			controls.update()
 
 
@@ -332,6 +334,9 @@
 		function render() {
 
 			var time = Date.now() * 0.00005;
+
+			camera.position.x += ( mouseX - camera.position.x ) * 0.036;
+			camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
 
 			TWEEN.update();
 			theta += 0.2;

@@ -241,13 +241,15 @@
       camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
       camera.position.z = 200;
 
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      //controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 
-      controls.maxDistance = 1500;
-      controls.minDistance = 200;
-      controls.lookSpeed = 0.1;
-      controls.enablePan = false;
+      //controls.maxDistance = 1500;
+      //controls.minDistance = 200;
+      //controls.lookSpeed = 0.1;
+      //controls.enablePan = false;
+
+			//camera.lookAt( scene.position );
 
       controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
       controls.connect();
@@ -374,7 +376,7 @@
     }
 
     function setup() {
-      song.loop();
+      song.play();
 			fft = new p5.FFT( 0.3, 512 ); //smoothing, bands
 
       // create a new Amplitude analyzer

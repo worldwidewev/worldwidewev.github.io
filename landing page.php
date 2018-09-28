@@ -1,0 +1,549 @@
+<?php
+/**
+ * The template for displaying all pages.
+ *
+ * This is the template that displays all pages by default.
+ * Please note that this is the WordPress construct of pages and that other
+ * 'pages' on your WordPress site will use a different template.
+ *
+ * @package OceanWP WordPress theme
+ */
+
+get_header(); ?>
+
+	<?php do_action( 'ocean_before_content_wrap' ); ?>
+
+	<div id="content-wrap" class="container clr">
+
+		<?php do_action( 'ocean_before_primary' ); ?>
+
+		<div id="primary" class="content-area clr">
+
+			<?php do_action( 'ocean_before_content' ); ?>
+
+			<div id="content" class="site-content clr">
+
+				<?php do_action( 'ocean_before_content_inner' ); ?>
+
+				<?php
+				// Elementor `single` location
+				if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( 'single' ) ) {
+
+					// Start loop
+					while ( have_posts() ) : the_post();
+
+						get_template_part( 'partials/page/layout' );
+
+					endwhile;
+
+				} ?>
+
+				<?php do_action( 'ocean_after_content_inner' ); ?>
+
+			</div><!-- #content -->
+
+			<?php do_action( 'ocean_after_content' ); ?>
+
+			<div id="container"></div>
+
+			<script>alert('hi')</script>
+
+			<script src="js/three.js"></script>
+			<script src="js/Reflector.js"></script>
+			<script src="js/OrbitControls.js"></script>
+			<script src="js/OBJLoader.js"></script>
+			<script src="js/EffectComposer.js"></script>
+			<script src="js/RenderPass.js"></script>
+			<script src="js/MaskPass.js"></script>
+			<script src="js/ShaderPass.js"></script>
+			<script src="js/SimplifyModifier.js"></script>
+			<script src="js/CopyShader.js"></script>
+			<script src="js/ConvolutionShader.js"></script>
+			<script src="js/LuminosityHighPassShader.js"></script>
+			<script src="js/UnrealBloomPass.js"></script>
+			<script src="js/Detector.js"></script>
+			<script src="js/stats.min.js"></script>
+			<script>
+
+
+	// Simple form of tiled forward lighting
+	// using texels as bitmasks of 32 lights
+	var RADIUS = 75;
+	THREE.ShaderChunk[ 'lights_pars_begin' ] += [
+		'#if defined TILED_FORWARD',
+		'uniform vec4 tileData;',
+		'uniform sampler2D tileTexture;',
+		'uniform sampler2D lightTexture;',
+		'#endif'
+	].join( '\n' );
+	THREE.ShaderChunk[ 'lights_fragment_end' ] += [
+		'',
+		'#if defined TILED_FORWARD',
+		'vec2 tUv = floor(gl_FragCoord.xy / tileData.xy * 32.) / 32. + tileData.zw;',
+		'vec4 tile = texture2D(tileTexture, tUv);',
+		'for (int i=0; i < 4; i++) {',
+		'	float tileVal = tile.x * 255.;',
+		'  	tile.xyzw = tile.yzwx;',
+		'	if(tileVal == 0.){ continue; }',
+		'  	float tileDiv = 128.;',
+		'	for (int j=0; j < 8; j++) {',
+		'  		if (tileVal < tileDiv) {  tileDiv *= 0.5; continue; }',
+		'		tileVal -= tileDiv;',
+		'		tileDiv *= 0.5;',
+		'  		PointLight pointlight;',
+		'		float uvx = (float(8 * i + j) + 0.5) / 32.;',
+		'  		vec4 lightData = texture2D(lightTexture, vec2(uvx, 0.));',
+		'  		vec4 lightColor = texture2D(lightTexture, vec2(uvx, 1.));',
+		'  		pointlight.position = lightData.xyz;',
+		'  		pointlight.distance = lightData.w;',
+		'  		pointlight.color = lightColor.rgb;',
+		'  		pointlight.decay = lightColor.a;',
+		'  		getPointDirectLightIrradiance( pointlight, geometry, directLight );',
+		'		RE_Direct( directLight, geometry, material, reflectedLight );',
+		'	}',
+		'}',
+		'#endif'
+	].join( '\n' );
+	var lights = [], objects = [];
+	var State = {
+		rows: 0,
+		cols: 0,
+		width: 0,
+		height: 0,
+		tileData: { value: null },
+		tileTexture: { value: null },
+		lightTexture: {
+			value: new THREE.DataTexture( new Float32Array( 32 * 2 * 4 ), 32, 2, THREE.RGBAFormat, THREE.FloatType )
+		},
+	};
+	function resizeTiles() {
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+		State.width = width;
+		State.height = height;
+		State.cols = Math.ceil( width / 32 );
+		State.rows = Math.ceil( height / 32 );
+		State.tileData.value = [ width, height, 0.5 / Math.ceil( width / 32 ), 0.5 / Math.ceil( height / 32 ) ];
+		State.tileTexture.value = new THREE.DataTexture( new Uint8Array( State.cols * State.rows * 4 ), State.cols, State.rows );
+	}
+	// Generate the light bitmasks and store them in the tile texture
+	function tileLights( renderer, scene, camera ) {
+		if ( ! camera.projectionMatrix ) return;
+		var d = State.tileTexture.value.image.data;
+		var ld = State.lightTexture.value.image.data;
+		var viewMatrix = camera.matrixWorldInverse;
+		d.fill( 0 );
+		var vector = new THREE.Vector3();
+		lights.forEach( function ( light, index ) {
+			vector.setFromMatrixPosition( light.matrixWorld );
+			var bs = lightBounds( camera, vector, light._light.radius );
+			vector.applyMatrix4( viewMatrix );
+			vector.toArray( ld, 4 * index );
+			ld[ 4 * index + 3 ] = light._light.radius;
+			light._light.color.toArray( ld, 32 * 4 + 4 * index );
+			ld[ 32 * 4 + 4 * index + 3 ] = light._light.decay;
+			if ( bs[ 1 ] < 0 || bs[ 0 ] > State.width || bs[ 3 ] < 0 || bs[ 2 ] > State.height ) return;
+			if ( bs[ 0 ] < 0 ) bs[ 0 ] = 0;
+			if ( bs[ 1 ] > State.width ) bs[ 1 ] = State.width;
+			if ( bs[ 2 ] < 0 ) bs[ 2 ] = 0;
+			if ( bs[ 3 ] > State.height ) bs[ 3 ] = State.height;
+			var i4 = Math.floor( index / 8 ), i8 = 7 - ( index % 8 );
+			for ( var i = Math.floor( bs[ 2 ] / 32 ); i <= Math.ceil( bs[ 3 ] / 32 ); i ++ ) {
+				for ( var j = Math.floor( bs[ 0 ] / 32 ); j <= Math.ceil( bs[ 1 ] / 32 ); j ++ ) {
+					d[ ( State.cols * i + j ) * 4 + i4 ] |= 1 << i8;
+				}
+			}
+		} );
+		State.tileTexture.value.needsUpdate = true;
+		State.lightTexture.value.needsUpdate = true;
+	}
+	// Screen rectangle bounds from light sphere's world AABB
+	var lightBounds = function () {
+		v = new THREE.Vector3();
+		return function ( camera, pos, r ) {
+			var minX = State.width, maxX = 0, minY = State.height, maxY = 0, hw = State.width / 2, hh = State.height / 2;
+			for ( var i = 0; i < 8; i ++ ) {
+				v.copy( pos );
+				v.x += i & 1 ? r : - r;
+				v.y += i & 2 ? r : - r;
+				v.z += i & 4 ? r : - r;
+				var vector = v.project( camera );
+				var x = ( vector.x * hw ) + hw;
+				var y = ( vector.y * hh ) + hh;
+				minX = Math.min( minX, x );
+				maxX = Math.max( maxX, x );
+				minY = Math.min( minY, y );
+				maxY = Math.max( maxY, y );
+			}
+			return [ minX, maxX, minY, maxY ];
+	};
+	}();
+
+				// scene size
+				var WIDTH = window.innerWidth;
+				var HEIGHT = window.innerHeight;
+				// camera
+				var VIEW_ANGLE = 45;
+				var ASPECT = WIDTH / HEIGHT;
+				var NEAR = 1;
+				var FAR = 500;
+				var camera, scene, renderer;
+				var cameraControls;
+				var sphereGroup, smallSphere;
+				init();
+
+				function init() {
+					var container = document.getElementById( 'container' );
+
+					// renderer
+					renderer = new THREE.WebGLRenderer( { antialias: true } );
+					renderer.setPixelRatio( window.devicePixelRatio );
+					renderer.setSize( WIDTH, HEIGHT );
+					renderer.toneMapping = THREE.LinearToneMapping;
+					container.appendChild( renderer.domElement );
+
+					var renderTarget = new THREE.WebGLRenderTarget();
+
+
+					// bloom
+					var bloom = new THREE.UnrealBloomPass( new THREE.Vector2(), 0.8, 0.6, 0.8 );
+					bloom.renderToScreen = true;
+
+					// scene
+					scene = new THREE.Scene();
+
+					scene.add( new THREE.PointLight( 0xff0000, 0.1, 0.1 ) );
+					scene.add( new THREE.AmbientLight( 0xcccccc, 0.5, 0.5));
+
+					//fps stats
+					var stats = new Stats();
+					container.appendChild( stats.dom );
+
+					// camera
+					camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR );
+					camera.position.set( 0, 75, -200 );
+					cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+					cameraControls.maxPolarAngle = Math.PI * 0.415;
+					cameraControls.target.set( 0, 0, 0);
+					cameraControls.maxDistance = 400;
+					cameraControls.minDistance = 10;
+					cameraControls.update();
+
+					//object
+					var materials = [];
+					var w64 = [
+						{ type: 'phong', uniforms: { diffuse: 0x777777, shininess: 20 }, defines: {} },
+						];
+
+
+
+					function init( geom ) {
+								var sphereGeom = new THREE.SphereBufferGeometry( 0.5, 32, 32 );
+								var tIndex = Math.round( Math.random() * 3 );
+								Object.keys( w64 ).forEach( function ( t, index ) {
+								var g = new THREE.Group();
+								var conf = w64[ t ];
+								var ml = THREE.ShaderLib[ conf.type ];
+								var mtl = new THREE.ShaderMaterial( {
+										lights: true,
+										fragmentShader: ml.fragmentShader,
+										vertexShader: ml.vertexShader,
+										uniforms: THREE.UniformsUtils.clone( ml.uniforms ),
+										defines: conf.defines,
+										transparent: tIndex === index ? true : false,
+									} );
+
+					mtl.uniforms.opacity.value = tIndex === index ? 0.9 : 1;
+					mtl.uniforms.tileData = State.tileData;
+					mtl.uniforms.tileTexture = State.tileTexture;
+					mtl.uniforms.lightTexture = State.lightTexture;
+					for ( var u in conf.uniforms ) {
+						var vu = conf.uniforms[ u ];
+						if ( mtl.uniforms[ u ].value.set ) {
+							mtl.uniforms[ u ].value.set( vu );
+						} else {
+							mtl.uniforms[ u ].value = vu;
+						}
+					}
+					mtl.defines[ 'TILED_FORWARD' ] = 1;
+					materials.push( mtl );
+					var obj = new THREE.Mesh( geom, mtl );
+
+					//obj.position.y = - 37;
+					//obj.scale.set( 5, 5, 5 );
+					var useWireFrame = true;
+			if (useWireFrame) {
+					obj.traverse(function (child) {
+							if (child instanceof THREE.Mesh) child.material.wireframe = true;
+					});
+			}
+
+					obj.position.y = -10
+					obj.rotation.set(0, 9.44, 0);
+					obj.__dirtyRotation = true;
+					mtl.side = tIndex === index ? THREE.FrontSide : THREE.DoubleSide;
+					g.rotation.y = index * Math.PI / 2;
+					g.position.x = 0
+					g.position.y = 34
+					g.position.z = 0
+					g.add( obj );
+					for ( var i = 0; i < 24; i ++ ) {  //number of particles
+						var color = new THREE.Color().setHSL( Math.random(), 1.0, 1 );
+						var l = new THREE.Group();
+						l.add( new THREE.Mesh(
+							sphereGeom,
+							new THREE.MeshBasicMaterial( {
+								color: color
+							} )
+						) );
+						l.add( new THREE.Mesh(
+							sphereGeom,
+							new THREE.MeshBasicMaterial( {
+								color: color,
+								transparent: true,
+								opacity: 0.033
+							} )
+						) );
+						l.children[ 1 ].scale.set( 2, 2, 2 ); //size of particles
+						l._light = {
+							color: color,
+							radius: RADIUS,
+							decay: 1,
+							sy: Math.random(),
+							sr: Math.random(),
+							sc: Math.random(),
+							py: Math.random() * Math.PI,
+							pr: Math.random() * Math.PI,
+							pc: Math.random() * Math.PI,
+							dir: Math.random() > 0.5 ? 1 : - 1
+						};
+						lights.push( l );
+						g.add( l );
+					}
+					scene.add( g );
+				} );
+			}
+
+			var length = 24, width = 16;
+
+	//var shape = new THREE.Shape();
+	//shape.moveTo( 0,0,0 );
+	//shape.lineTo( 0, width );
+	//shape.lineTo( length, width );
+	//shape.lineTo( length, 0 );
+	//shape.lineTo( 0, 0 );
+
+	//var extrudeSettings = {
+		//steps: 1,
+		//depth: 3,
+		//bevelEnabled: true,
+		//bevelThickness: 2,
+		//bevelSize: 2,
+		//bevelSegments: 1
+	//};
+
+	//var geometry = new THREE.ExtrudeBufferGeometry( shape, extrudeSettings );
+	//var material = new THREE.MeshPhongMaterial( { color: 0x007a26 } );
+	//var box1 = new THREE.Mesh( geometry, material ) ;
+			//box1.position.x = 88
+			//box1.position.y = 50
+			//box1.position.z = 200
+	//scene.add( box1 );
+
+
+	//var geometry = new THREE.ExtrudeBufferGeometry( shape, extrudeSettings );
+	//var material = new THREE.MeshPhongMaterial( { color: 0x0061ff } );
+	//var box2 = new THREE.Mesh( geometry, material ) ;
+			//box2.position.x = -12
+			//box2.position.y = 50
+			//box2.position.z = 200
+	//scene.add( box2 );
+
+
+	//var geometry = new THREE.ExtrudeBufferGeometry( shape, extrudeSettings );
+	//var material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+	//var box3 = new THREE.Mesh( geometry, material ) ;
+			//box3.position.x = -112
+			//box3.position.y = 50
+			//box3.position.z = 200
+	//scene.add( box3 );
+
+
+
+
+
+			function update( now ) {
+				lights.forEach( function ( l ) {
+					var ld = l._light;
+					var radius = 0.8 + 0.2 * Math.sin( ld.pr + ( 0.6 + 0.3 * ld.sr ) * now );
+					l.position.x = ( Math.sin( ld.pc + ( 0.8 + 0.2 * ld.sc ) * now * ld.dir ) ) * radius * RADIUS;
+					l.position.z = ( Math.cos( ld.pc + ( 0.8 + 0.2 * ld.sc ) * now * ld.dir ) ) * radius * RADIUS;
+					l.position.y = Math.sin( ld.py + ( 0.8 + 0.2 * ld.sy ) * now ) * radius * 32;
+				} );
+			}
+
+
+			function resize() {
+		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderTarget.setSize( window.innerWidth, window.innerHeight );
+		bloom.setSize( window.innerWidth, window.innerHeight );
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		resizeTiles();
+	}
+
+	function postEffect( renderer, scene, camera ) {
+		bloom.render( renderer, null, renderTarget );
+	}
+	scene.onBeforeRender = tileLights;
+	scene.onAfterRender = postEffect;
+	var loader = new THREE.OBJLoader();
+	loader.load( 'models/head.obj', function ( object ) {
+		var geometry = object.children[ 0 ].geometry;
+
+		window.addEventListener( 'resize', resize );
+		init( geometry );
+		resize();
+		renderer.setAnimationLoop( function ( time ) {
+			update( time / 1000 );
+
+			stats.begin();
+			renderer.render( scene, camera, renderTarget );
+
+			stats.end();
+		} );
+
+			var modifer = new THREE.SimplifyModifier();
+			var simplified = modifer.modify( object, Math.floor( object.vertices.length * 0.9375 ));
+
+	} );
+
+					var planeGeo = new THREE.PlaneBufferGeometry( 100.1, 100.1 );
+					var platformGeo = new THREE.PlaneBufferGeometry( 50, 50);
+
+					// reflectors/mirrors
+					var geometry = new THREE.CircleBufferGeometry( 40, 64 );
+					var groundMirror = new THREE.Reflector( geometry, {
+						clipBias: 0.003,
+						textureWidth: WIDTH * window.devicePixelRatio,
+						textureHeight: HEIGHT * window.devicePixelRatio,
+						color: 0x777777,
+						recursion: 1
+					} );
+					groundMirror.position.y = -14.5;
+					groundMirror.rotateX( - Math.PI / 2 );
+					scene.add( groundMirror );
+					var geometry = new THREE.PlaneBufferGeometry( 100, 100 );
+					var verticalMirror = new THREE.Reflector( geometry, {
+						clipBias: 0.003,
+						textureWidth: WIDTH * window.devicePixelRatio,
+						textureHeight: HEIGHT * window.devicePixelRatio,
+						color: 0x889999,
+						recursion: 1
+					} );
+					verticalMirror.position.y = 35;
+					verticalMirror.position.z = - 50;
+					scene.add( verticalMirror );
+
+
+					//sphere (WORKING)
+					sphereGroup = new THREE.Object3D();
+					//scene.add( sphereGroup );
+					var geometry = new THREE.CylinderBufferGeometry( 0.1, 15 * Math.cos( Math.PI / 180 * 30 ), 0.1, 24, 1 );
+					var material = new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x444444 } );
+					var sphereCap = new THREE.Mesh( geometry, material );
+					sphereCap.position.y = - 15 * Math.sin( Math.PI / 180 * 30 ) - 0.05;
+					sphereCap.rotateX( - Math.PI );
+					var geometry = new THREE.SphereBufferGeometry( 15, 24, 24, Math.PI / 2, Math.PI * 2, 0, Math.PI / 180 * 120 );
+					var halfSphere = new THREE.Mesh( geometry, material );
+					halfSphere.add( sphereCap );
+					halfSphere.rotateX( - Math.PI / 180 * 135 );
+					halfSphere.rotateZ( - Math.PI / 180 * 20 );
+					halfSphere.position.y = 7.5 + 15 * Math.sin( Math.PI / 180 * 30 );
+					//sphereGroup.add( halfSphere );
+
+					//var geometry = new THREE.IcosahedronBufferGeometry( 5, 0 );
+					//var material = new THREE.MeshPhongMaterial( { color: 0xffffff, emissive: 0x333333, flatShading: true } );
+					//smallSphere = new THREE.Mesh( geometry, material );
+					//scene.add(smallSphere);
+
+					// walls
+					var planeTop = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+					planeTop.position.y = 100;
+					planeTop.rotateX( Math.PI / 2 );
+					//scene.add( planeTop );
+					var planeBottom = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+					planeBottom.position.y = -15
+					planeBottom.rotateX( - Math.PI / 2 );
+					scene.add( planeBottom );
+
+					var planeFront = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0x7f7fff } ) );
+					planeFront.position.z = 50;
+					planeFront.position.y = 50;
+					planeFront.rotateY( Math.PI );
+					//scene.add( planeFront );
+					var planeRight = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0x00ff00 } ) );
+					planeRight.position.x = 50;
+					planeRight.position.y = 50;
+					planeRight.rotateY( - Math.PI / 2 );
+					//scene.add( planeRight );
+					var planeLeft = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0xff0000 } ) );
+					planeLeft.position.x = -50;
+					planeLeft.position.y = 50;
+					planeLeft.rotateY( Math.PI / 2 );
+					//scene.add( planeLeft );
+
+					// platforms
+
+					var plane1 = new THREE.Mesh( platformGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+					plane1.position.x = 0
+					plane1.position.y = 40
+					plane1.position.z = 200
+					plane1.rotateX( - Math.PI / 2 );
+					//scene.add( plane1 );
+
+					var plane2 = new THREE.Mesh( platformGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+					plane2.position.x = 100
+					plane2.position.y = 40
+					plane2.position.z = 200
+					plane2.rotateX( - Math.PI / 2 );
+					//scene.add( plane2 );
+
+					var plane3 = new THREE.Mesh( platformGeo, new THREE.MeshPhongMaterial( { color: 0xffffff } ) );
+					plane3.position.x = -100
+					plane3.position.y = 40
+					plane3.position.z = 200
+					plane3.rotateX( - Math.PI / 2 );
+					//scene.add( plane3 );
+
+					// lights
+					var mainLight = new THREE.PointLight( 0xcccccc, 1.5, 250 );
+					mainLight.position.y = 60;
+					scene.add( mainLight );
+					var greenLight = new THREE.PointLight( 0xcccccc, 0.25, 1000 );
+					greenLight.position.set( 550, 50, 0 );
+					scene.add( greenLight );
+					var redLight = new THREE.PointLight( 0xcccccc, 0.25, 1000 );
+					redLight.position.set( - 550, 50, 0 );
+					scene.add( redLight );
+					var blueLight = new THREE.PointLight( 0xcccccc, 0.25, 1000 );
+					blueLight.position.set( 0, 50, 550 );
+					scene.add( blueLight );
+				}
+
+
+
+			</script>
+
+		</div><!-- #primary -->
+
+		<?php do_action( 'ocean_after_primary' ); ?>
+
+		<?php do_action( 'ocean_display_sidebar' ); ?>
+
+	</div><!-- #content-wrap -->
+
+	<?php do_action( 'ocean_after_content_wrap' ); ?>
+
+<?php get_footer(); ?>

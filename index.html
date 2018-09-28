@@ -261,7 +261,7 @@ var lightBounds = function () {
 
 				//obj.position.y = - 37;
 				//obj.scale.set( 5, 5, 5 );
-				var useWireFrame = true;
+				var useWireFrame = false;
 		if (useWireFrame) {
 				obj.traverse(function (child) {
 						if (child instanceof THREE.Mesh) child.material.wireframe = true;

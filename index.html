@@ -145,12 +145,14 @@
 
 					var controls;
 
-					if (window.mobileCheck)
+					if (window.mobileCheck = true)
 					{ controls = new THREE.DeviceOrientationControls(camera, renderer.domElement)
 					controls.connect();
-				} else {
+				}
 
-				controls = new THREE.OrbitControls(camera, renderer.domElement);
+				if (window.mobileCheck = false)
+
+				{ controls = new THREE.OrbitControls(camera, renderer.domElement);
 				}
 
 
@@ -161,8 +163,8 @@
 					raycaster = new THREE.Raycaster();
 					mouse = new THREE.Vector2();
 					//
-					stats = new Stats();
-					container.appendChild(stats.dom);
+					//stats = new Stats();
+					//container.appendChild(stats.dom);
 					//
 					window.addEventListener('resize', onWindowResize, false);
 					document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -213,7 +215,7 @@
 					render();
 
 
-					stats.update();
+					//stats.update();
 				}
 
 				function render() {

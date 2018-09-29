@@ -32,10 +32,11 @@
 		<div id="container"></div>
 		<div id="info"><a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - interactive - particles</div>
 
-		<script src="../build/three.js"></script>
+		<script src="js/three.js"></script>
+		<script src="js/DeviceOrientationControls.js"></script>
 
 		<script src="js/WebGL.js"></script>
-		<script src="js/libs/stats.min.js"></script>
+		<script src="js/stats.min.js"></script>
 
 		<script type="x-shader/x-vertex" id="vertexshader">
 			attribute float size;
@@ -76,9 +77,12 @@
 				var container = document.getElementById( 'container' );
 				scene = new THREE.Scene();
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.z = 250;
+				//camera.position.z = 250;
+
+
+
 				//
-				var vertices = new THREE.BoxGeometry( 200, 200, 200, 16, 16, 16 ).vertices;
+				var vertices = new THREE.BoxGeometry( 2000, 2000, 2000, 16, 16, 16 ).vertices;
 				var positions = new Float32Array( vertices.length * 3 );
 				var colors = new Float32Array( vertices.length * 3 );
 				var sizes = new Float32Array( vertices.length );
@@ -99,7 +103,7 @@
 				var material = new THREE.ShaderMaterial( {
 					uniforms: {
 						color:   { value: new THREE.Color( 0xffffff ) },
-						texture: { value: new THREE.TextureLoader().load( "textures/sprites/disc.png" ) }
+						texture: { value: new THREE.TextureLoader().load( "textures/marble.jpg" ) }
 					},
 					vertexShader: document.getElementById( 'vertexshader' ).textContent,
 					fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
@@ -114,6 +118,12 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 				//
+
+
+				      controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
+				      controls.connect();
+
+
 				raycaster = new THREE.Raycaster();
 				mouse = new THREE.Vector2();
 				//
@@ -135,6 +145,9 @@
 			}
 			function animate() {
 				requestAnimationFrame( animate );
+
+				controls.update()
+
 				render();
 				stats.update();
 			}

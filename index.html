@@ -143,17 +143,12 @@
   return check;
 };
 
-					var controls;
+					var controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
+						controls.connect();
 
-					if (window.mobileCheck = true)
-					{ controls = new THREE.DeviceOrientationControls(camera, renderer.domElement)
-					controls.connect();
-				}
+					if (window.mobilecheck() == false)
+					{ controls = new THREE.OrbitControls(camera, renderer.domElement)}
 
-				if (window.mobileCheck = false)
-
-				{ controls = new THREE.OrbitControls(camera, renderer.domElement);
-				}
 
 
 

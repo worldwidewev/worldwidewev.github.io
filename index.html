@@ -200,9 +200,9 @@
 					var controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
 					controls.connect();
 
-					if (window.mobilecheck() == false) {
-						controls = new THREE.OrbitControls(camera, renderer.domElement)
-					}
+					//if (window.mobilecheck() == false) {
+					//	controls = new THREE.OrbitControls(camera, renderer.domElement)
+					//}
 
 					raycaster = new THREE.Raycaster();
 					mouse = new THREE.Vector2();

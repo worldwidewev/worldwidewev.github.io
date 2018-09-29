@@ -43,7 +43,6 @@
 		<script src="js/Reflector.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/OBJLoader.js"></script>
-		<script src="js/JSONLoader.js"></script>
 		<script src="js/EffectComposer.js"></script>
 		<script src="js/RenderPass.js"></script>
 		<script src="js/MaskPass.js"></script>
@@ -316,31 +315,6 @@ var lightBounds = function () {
 		}
 
 		var length = 24, width = 16;
-
-//.json test
-		import * as THREE from 'three'
-
-const createSpotify = async scene => {
-    const loader = new THREE.JSONLoader()
-    const spotifyTexture = new THREE.TextureLoader().load(`/textures/spotify-2-logo-png-transparent.png`)
-    const spotifyMaterial = new THREE.MeshBasicMaterial({ map: spotifyTexture })
-    const spotifyGeometry = await new Promise(resolve => {
-        loader.load(`models/spotifycoin.json`, geometry => {
-            resolve(geometry)
-        })
-    })
-    const spotify = new THREE.Mesh(spotifyGeometry, spotifyMaterial)
-
-		const scale = 0.1
-		spotify.scale.set(scale, scale, scale)
-
-		spotify.position.x = 15
-		spotify.position.y = 15
-		spotify.position.z = 15
-    scene.add(spotify)
-
-
-}
 
 //var shape = new THREE.Shape();
 //shape.moveTo( 0,0,0 );

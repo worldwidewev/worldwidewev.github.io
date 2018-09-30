@@ -179,17 +179,13 @@
 						 controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 						 controls.connect();
 
-						 if (window.mobilecheck() == false){ controls = new THREE.OrbitControls(camera, renderer.domElement);
-						 }
+						 // ! this gives me"(index):211 Uncaught ReferenceError: controls is not defined at animate ((index):211) !
+						//var controls;
 
-						// controls = function(isMobile){
-						//	 if (window.mobilecheck() == true){
-						//		 controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
-						//		 controls.connect();
-						//	 } else {
-						//		 controls = new THREE.OrbitControls(camera, renderer.domElement);
-						//	 }
-						// };
+						//if (window.mobilecheck() == true){ controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
+						//} else {
+						//	controls = new THREE.OrbitControls(camera, renderer.domElement);
+						//}
 
 			 raycaster = new THREE.Raycaster();
 			 mouse = new THREE.Vector2();

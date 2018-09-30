@@ -114,7 +114,7 @@
 		 if ( WEBGL.isWebGLAvailable() === false ) {
 			 document.body.appendChild( WEBGL.getWebGLErrorMessage() );
 		 }
-		 var renderer, scene, camera, stats;
+		 var renderer, scene, camera, stats, controls;
 		 var particles, uniforms;
 		 var PARTICLE_SIZE = 20;
 		 var raycaster, intersects;
@@ -176,16 +176,16 @@
 				 return check;
 			 };
 
-						 controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
-						 controls.connect();
+						 //controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
+						 //controls.connect();
 
 						 // ! this gives me"(index):211 Uncaught ReferenceError: controls is not defined at animate ((index):211) !
-						//var controls;
+						var controls;
 
-						//if (window.mobilecheck() == true){ controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
-						//} else {
-						//	controls = new THREE.OrbitControls(camera, renderer.domElement);
-						//}
+						if (window.mobilecheck() == true){ controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
+						} else {
+						controls = new THREE.OrbitControls(camera, renderer.domElement);
+						}
 
 			 raycaster = new THREE.Raycaster();
 			 mouse = new THREE.Vector2();

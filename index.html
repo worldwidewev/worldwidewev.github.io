@@ -128,6 +128,93 @@
 			 camera.position.z = 2;
 
 			 //
+
+			 //lights
+			 var light = new THREE.AmbientLight(0xffffff, 0.8);
+			 scene.add(light);
+
+			 var light2 = new THREE.PointLight(0xffffff, 0.8);
+			 scene.add(light2);
+			 //
+
+			 //objects
+
+				 //spotify
+				 var loader = new THREE.JSONLoader();
+
+				 loader.load('models/spotifycoin.json', handle_load1);
+
+				 var spotify;
+
+				 function handle_load1(geometry, materials) {
+
+				 var material = new THREE.MultiMaterial(materials);
+				 material.morphTargets = true;
+
+				 spotify = new THREE.Mesh(geometry, material);
+				 scene.add(spotify);
+
+				 spotify.position.x = -30;
+					 }
+
+				 //apple
+				 var loader = new THREE.JSONLoader();
+
+				 loader.load('models/applemusiccoin.json', handle_load2);
+
+				 var apple;
+
+				 function handle_load2(geometry, materials) {
+
+
+				 var material = new THREE.MultiMaterial(materials);
+				 material.morphTargets = true;
+
+				 apple = new THREE.Mesh(geometry, material);
+				 scene.add(apple);
+
+				 apple.position.x = 30
+					 }
+
+				 //soundcloud
+				 var loader = new THREE.JSONLoader();
+
+				 loader.load('models/soundcloudcoin.json', handle_load3);
+
+				 var soundcloud;
+
+				 function handle_load3(geometry, materials) {
+
+
+				 var material = new THREE.MultiMaterial(materials);
+				 material.morphTargets = true;
+
+				 soundcloud = new THREE.Mesh(geometry, material);
+				 scene.add(soundcloud);
+
+				 soundcloud.position.z = -30
+					 }
+
+				 //googleplay
+				 var loader = new THREE.JSONLoader();
+
+				 loader.load('models/googleplaycoin.json', handle_load4);
+
+				 var googleplay;
+
+				 function handle_load4(geometry, materials) {
+
+
+				 var material = new THREE.MultiMaterial(materials);
+				 material.morphTargets = true;
+
+				 googleplay = new THREE.Mesh(geometry, material);
+				 scene.add(googleplay);
+
+				 googleplay.position.z = 30
+					 }
+
+			 //
 			 var vertices = new THREE.BoxGeometry( 2000, 2000, 2000, 16, 16, 16 ).vertices;
 			 var positions = new Float32Array( vertices.length * 3 );
 			 var colors = new Float32Array( vertices.length * 3 );

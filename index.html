@@ -101,9 +101,10 @@
 				if (WEBGL.isWebGLAvailable() === false) {
 					document.body.appendChild(WEBGL.getWebGLErrorMessage());
 				}
+
 				var renderer, scene, camera, stats, controls;
-				var animate, mixer, clip;
-				var spotify, apple, soundcloud, googleplay;
+				var container, stats, clock, mixer;
+				var spotify;
 				var particles, uniforms;
 				var PARTICLE_SIZE = 20;
 				var raycaster, intersects;
@@ -116,6 +117,10 @@
 
 					scene = new THREE.Scene();
 
+					clock = new THREE.Clock();
+
+					mixer = new THREE.AnimationMixer( scene );
+
 					camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
 					camera.position.z = 2;
 
@@ -123,122 +128,8 @@
 					var light = new THREE.AmbientLight(0xffffff, 0.8);
 					scene.add(light);
 
-					var light2 = new THREE.PointLight(0xffffff, 0.8);
+					var light2 = new THREE.PointLight(0xffffff, 0.1);
 					scene.add(light2);
-
-					//objects
-
-					//spotify
-					var loader = new THREE.JSONLoader();
-
-					loader.load('models/spotifycoin.json', handle_load1);
-
-					var spotify;
-					var mixer
-
-					function handle_load1(geometry, materials) {
-
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						spotify = new THREE.Mesh(geometry, material);
-						scene.add(spotify);
-
-						spotify.position.x = -10;
-						spotify.position.y = -8;
-						spotify.position.z = -30;
-
-						mixer = new THREE.AnimationMixer(spotify);
-
-						var clip = THREE.AnimationClip.CreateFromMorphTargetSequence('spin', geometry.morphTargets, 24);
-						mixer.clipAction(clip).setDuration(1).play;
-
-					}
-
-					//apple
-					var loader = new THREE.JSONLoader();
-
-					loader.load('models/applemusiccoin.json', handle_load2);
-
-					var apple;
-
-					function handle_load2(geometry, materials) {
-
-
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						apple = new THREE.Mesh(geometry, material);
-						scene.add(apple);
-
-						apple.position.x = 25;
-						apple.position.y = -8;
-						apple.position.z = -15;
-					}
-
-					//soundcloud
-					var loader = new THREE.JSONLoader();
-
-					loader.load('models/soundcloudcoin.json', handle_load3);
-
-					var soundcloud;
-
-					function handle_load3(geometry, materials) {
-
-
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						soundcloud = new THREE.Mesh(geometry, material);
-						scene.add(soundcloud);
-
-						soundcloud.position.x = 10;
-						soundcloud.position.y = -8;
-						soundcloud.position.z = -30;
-					}
-
-					//googleplay
-					var loader = new THREE.JSONLoader();
-
-					loader.load('models/googleplaycoin.json', handle_load4);
-
-					var googleplay;
-
-					function handle_load4(geometry, materials) {
-
-
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						googleplay = new THREE.Mesh(geometry, material);
-						scene.add(googleplay);
-
-						googleplay.position.x = -25;
-						googleplay.position.y = -8;
-						googleplay.position.z = -15;
-					}
-
-					//wevhead
-					var loader = new THREE.JSONLoader();
-
-					loader.load('models/wevhead.json', handle_load5);
-
-					var wevhead;
-
-					function handle_load5(geometry, materials) {
-
-
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						wevhead = new THREE.Mesh(geometry, material);
-						scene.add(wevhead);
-
-						wevhead.position.y = 40;
-						wevhead.position.z = -100;
-
-						wevhead.rotation.x = 0.7;
-					}
 
 					//
 					var vertices = new THREE.BoxGeometry(2000, 2000, 2000, 16, 16, 16).vertices;
@@ -293,12 +184,6 @@
 						return check;
 					};
 
-					//controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
-					//controls.connect();
-
-					// ! this gives me"(index):211 Uncaught ReferenceError: controls is not defined at animate ((index):211) !
-
-
 					if (window.mobilecheck() == true) {
 						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 					} else {
@@ -307,13 +192,106 @@
 
 					raycaster = new THREE.Raycaster();
 					mouse = new THREE.Vector2();
+
 					//
+					var loader = new THREE.JSONLoader();
+					//objects
+					//spotify
+					loader.load('models/spotifycoin.json', handle_load1);
+
+					var spotify;
+
+					function handle_load1(geometry, materials) {
+
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						spotify = new THREE.Mesh(geometry, material);
+						scene.add(spotify);
+
+						spotify.position.x = -10;
+						spotify.position.y = -8;
+						spotify.position.z = -30;
+
+						mixer.clipAction( geometry.animations[ 0 ], mesh )
+						.setDuration( 1 )
+						.startAt( - Math.random() )
+						.play();
+					}
+
+					//apple
+					loader.load('models/applemusiccoin.json', handle_load2);
+
+					function handle_load2(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						apple = new THREE.Mesh(geometry, material);
+						scene.add(apple);
+
+						apple.position.x = 25;
+						apple.position.y = -8;
+						apple.position.z = -15;
+					}
+
+					//soundcloud
+					loader.load('models/soundcloudcoin.json', handle_load3);
+
+					function handle_load3(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						soundcloud = new THREE.Mesh(geometry, material);
+						scene.add(soundcloud);
+
+						soundcloud.position.x = 10;
+						soundcloud.position.y = -8;
+						soundcloud.position.z = -30;
+					}
+
+					//googleplay
+					loader.load('models/googleplaycoin.json', handle_load4);
+
+					var googleplay;
+
+					function handle_load4(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						googleplay = new THREE.Mesh(geometry, material);
+						scene.add(googleplay);
+
+						googleplay.position.x = -25;
+						googleplay.position.y = -8;
+						googleplay.position.z = -15;
+					}
+
+					//wevhead
+					loader.load('models/wevhead.json', handle_load5);
+
+					var wevhead;
+
+					function handle_load5(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						wevhead = new THREE.Mesh(geometry, material);
+						scene.add(wevhead);
+
+						wevhead.position.y = 40;
+						wevhead.position.z = -100;
+
+						wevhead.rotation.x = 0.7;
+					}
+
 					//stats = new Stats();
 					//container.appendChild( stats.dom );
-					//
+
 					window.addEventListener('resize', onWindowResize, false);
 					document.addEventListener('mousemove', onDocumentMouseMove, false);
 				}
+
+
 
 				function onDocumentMouseMove(event) {
 					event.preventDefault();
@@ -330,24 +308,27 @@
 				function animate() {
 					requestAnimationFrame(animate);
 
+
 					controls.update()
 
 					render();
 					//stats.update();
 				}
 
+				var prevTime = Date.now();
+
+				if (mixer) {
+					var time = Date.now();
+					mixer.update((time - prevTime) * 0.001);
+					prevTime = time;
+				}
+
 				function render() {
 
-					var prevTime = Date.now();
+					var timer = Date.now() * 0.0005;
+					mixer.update( clock.getDelta() );
 
-					if (mixer) {
-						var time = Date.now();
-						mixer.update((time - prevTime) * 0.001);
-						prevTime = time;
 
-					}
-
-					//spotify.rotation.z += 0.01;
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;
 

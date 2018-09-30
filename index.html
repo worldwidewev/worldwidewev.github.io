@@ -116,10 +116,6 @@
 
 					scene = new THREE.Scene();
 
-					clock = new THREE.Clock();
-
-					mixer = new THREE.AnimationMixer( scene );
-
 					camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
 					camera.position.z = 2;
 
@@ -212,6 +208,8 @@
 
 					}
 
+					spotify = new THREE.Mesh(geometry, material);
+
 					//apple
 					loader.load('models/applemusiccoin.json', handle_load2);
 
@@ -226,6 +224,7 @@
 						apple.position.y = -8;
 						apple.position.z = -15;
 					}
+					apple = new THREE.Mesh(geometry, material);
 
 					//soundcloud
 					loader.load('models/soundcloudcoin.json', handle_load3);
@@ -241,11 +240,12 @@
 						soundcloud.position.y = -8;
 						soundcloud.position.z = -30;
 					}
+					soundcloud = new THREE.Mesh(geometry, material);
 
 					//googleplay
 					loader.load('models/googleplaycoin.json', handle_load4);
 
-					var googleplay;
+
 
 					function handle_load4(geometry, materials) {
 						var material = new THREE.MultiMaterial(materials);
@@ -258,6 +258,8 @@
 						googleplay.position.y = -8;
 						googleplay.position.z = -15;
 					}
+
+					googleplay = new THREE.Mesh(geometry, material);
 
 					//wevhead
 					loader.load('models/wevhead.json', handle_load5);
@@ -317,7 +319,13 @@
 				function render() {
 
 					var timer = Date.now() * 0.0005;
-	
+
+
+					spotify.rotation.y += -0.05;
+					apple.rotation.y += -0.05;
+					googleplay.rotation.y += -0.05;
+					soundcloud.rotation.y += -0.05;
+
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;
 

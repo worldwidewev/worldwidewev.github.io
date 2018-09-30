@@ -214,12 +214,13 @@
 
 						DDDINK.addURL(spotify, "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i");
 						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						spotify.userData.linkConfig.setShineOnMouse('ON')
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 
 						spotify.position.x = -8;
-						spotify.position.y = -8;
+						spotify.position.y = -12;
 						spotify.position.z = -30;
 
 					}
@@ -245,7 +246,7 @@
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 						apple.position.x = 20;
-						apple.position.y = -8;
+						apple.position.y = -12;
 						apple.position.z = -20;
 					}
 					apple = new THREE.Mesh(geometry, material);
@@ -266,7 +267,7 @@
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 						soundcloud.position.x = 8;
-						soundcloud.position.y = -8;
+						soundcloud.position.y = -12;
 						soundcloud.position.z = -30;
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
@@ -289,7 +290,7 @@
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 						googleplay.position.x = -20;
-						googleplay.position.y = -8;
+						googleplay.position.y = -12;
 						googleplay.position.z = -20;
 					}
 
@@ -307,7 +308,7 @@
 						wevhead = new THREE.Mesh(geometry, material);
 						scene.add(wevhead);
 
-						wevhead.position.y = 40;
+						wevhead.position.y = 30;
 						wevhead.position.z = -100;
 
 						wevhead.rotation.x = 0.7;

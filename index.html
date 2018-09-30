@@ -179,7 +179,7 @@
 						 controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 						 controls.connect();
 
-						 if (window.mobilecheck() == true){ controls = new THREE.OrbitControls(camera, renderer.domElement);
+						 if (window.mobilecheck() == false){ controls = new THREE.OrbitControls(camera, renderer.domElement);
 						 }
 
 						// controls = function(isMobile){

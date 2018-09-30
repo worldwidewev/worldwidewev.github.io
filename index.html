@@ -81,6 +81,7 @@
 
 
 	<script src="js/three.js"></script>
+	<script src="js/3Dink.js"></script>
 	<script src="js/DeviceOrientationControls.js"></script>
 	<script src="js/OrbitControls.js"></script>
 
@@ -107,6 +108,7 @@
 				var particles, uniforms;
 				var PARTICLE_SIZE = 20;
 				var raycaster, intersects;
+				var coins = [];
 				var mouse, INTERSECTED;
 				init();
 				animate();
@@ -117,17 +119,17 @@
 					scene = new THREE.Scene();
 
 					camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-					camera.position.z = 2;
+					camera.position.z = 20;
 
 					//lights
-					var light = new THREE.AmbientLight(0xffffff, 0.8);
+					var light = new THREE.AmbientLight(0xffffff, 0.9);
 					scene.add(light);
 
 					var light2 = new THREE.PointLight(0xffffff, 0.1);
 					scene.add(light2);
 
 					//
-					var vertices = new THREE.BoxGeometry(2000, 2000, 2000, 16, 16, 16).vertices;
+					var vertices = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16).vertices;
 					var positions = new Float32Array(vertices.length * 3);
 					var colors = new Float32Array(vertices.length * 3);
 					var sizes = new Float32Array(vertices.length);
@@ -151,7 +153,7 @@
 								value: new THREE.Color(0xffffff)
 							},
 							texture: {
-								value: new THREE.TextureLoader().load("textures/marble.jpg")
+								value: new THREE.TextureLoader().load("textures/star.png")
 							}
 						},
 						vertexShader: document.getElementById('vertexshader').textContent,
@@ -186,10 +188,14 @@
 					}
 
 					raycaster = new THREE.Raycaster();
+
 					mouse = new THREE.Vector2();
 
 					//
 					var loader = new THREE.JSONLoader();
+
+					var group = new THREE.Group();
+
 					//objects
 					//spotify
 					loader.load('models/spotifycoin.json', handle_load1);
@@ -200,15 +206,28 @@
 						material.morphTargets = true;
 
 						spotify = new THREE.Mesh(geometry, material);
-						scene.add(spotify);
+						//spotify.userData = {URL: "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i"};
 
-						spotify.position.x = -10;
+
+						scene.add(spotify);
+						group.add (spotify);
+
+						DDDINK.addURL(spotify, "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+
+						spotify.position.x = -8;
 						spotify.position.y = -8;
 						spotify.position.z = -30;
 
 					}
 
 					spotify = new THREE.Mesh(geometry, material);
+
+
+
 
 					//apple
 					loader.load('models/applemusiccoin.json', handle_load2);
@@ -220,9 +239,14 @@
 						apple = new THREE.Mesh(geometry, material);
 						scene.add(apple);
 
-						apple.position.x = 25;
+						DDDINK.addURL(apple, "https://itunes.apple.com/us/artist/wev/1356660469");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						apple.position.x = 20;
 						apple.position.y = -8;
-						apple.position.z = -15;
+						apple.position.z = -20;
 					}
 					apple = new THREE.Mesh(geometry, material);
 
@@ -236,7 +260,12 @@
 						soundcloud = new THREE.Mesh(geometry, material);
 						scene.add(soundcloud);
 
-						soundcloud.position.x = 10;
+						DDDINK.addURL(soundcloud, "https://soundcloud.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						soundcloud.position.x = 8;
 						soundcloud.position.y = -8;
 						soundcloud.position.z = -30;
 					}
@@ -254,9 +283,14 @@
 						googleplay = new THREE.Mesh(geometry, material);
 						scene.add(googleplay);
 
-						googleplay.position.x = -25;
+						DDDINK.addURL(googleplay, "https://play.google.com/store/music/artist/wev?id=A4p35kupb7hb7jnavvq7a7fqjka");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						googleplay.position.x = -20;
 						googleplay.position.y = -8;
-						googleplay.position.z = -15;
+						googleplay.position.z = -20;
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -279,6 +313,7 @@
 						wevhead.rotation.x = 0.7;
 					}
 
+					scene.add( group );
 					//stats = new Stats();
 					//container.appendChild( stats.dom );
 
@@ -345,6 +380,7 @@
 						attributes.size.needsUpdate = true;
 						INTERSECTED = null;
 					}
+
 					renderer.render(scene, camera);
 				}
 			</script>

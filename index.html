@@ -316,13 +316,8 @@
 
 				function render() {
 
-					var spotify;
-					spotify = new THREE.Mesh(geometry, material);
-
 					var timer = Date.now() * 0.0005;
-					mixer.update( clock.getDelta() );
-
-					spotify.rotation.z += 0.001;
+	
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;
 

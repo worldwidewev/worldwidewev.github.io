@@ -104,7 +104,6 @@
 
 				var renderer, scene, camera, stats, controls;
 				var container, stats, clock, mixer;
-				var spotify;
 				var particles, uniforms;
 				var PARTICLE_SIZE = 20;
 				var raycaster, intersects;
@@ -199,8 +198,6 @@
 					//spotify
 					loader.load('models/spotifycoin.json', handle_load1);
 
-					var spotify;
-
 					function handle_load1(geometry, materials) {
 
 						var material = new THREE.MultiMaterial(materials);
@@ -213,10 +210,6 @@
 						spotify.position.y = -8;
 						spotify.position.z = -30;
 
-						mixer.clipAction( geometry.animations[ 0 ], mesh )
-						.setDuration( 1 )
-						.startAt( - Math.random() )
-						.play();
 					}
 
 					//apple
@@ -308,9 +301,7 @@
 				function animate() {
 					requestAnimationFrame(animate);
 
-
-					controls.update()
-
+					controls.update();
 					render();
 					//stats.update();
 				}
@@ -325,10 +316,13 @@
 
 				function render() {
 
+					var spotify;
+					spotify = new THREE.Mesh(geometry, material);
+
 					var timer = Date.now() * 0.0005;
 					mixer.update( clock.getDelta() );
 
-
+					spotify.rotation.z += 0.001;
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;
 

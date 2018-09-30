@@ -115,6 +115,8 @@
 			 document.body.appendChild( WEBGL.getWebGLErrorMessage() );
 		 }
 		 var renderer, scene, camera, stats, controls;
+		 var animate, mixer, clip;
+		 var spotify, apple, soundcloud, googleplay;
 		 var particles, uniforms;
 		 var PARTICLE_SIZE = 20;
 		 var raycaster, intersects;
@@ -145,6 +147,7 @@
 				 loader.load('models/spotifycoin.json', handle_load1);
 
 				 var spotify;
+				 var mixer
 
 				 function handle_load1(geometry, materials) {
 
@@ -156,6 +159,12 @@
 
 				 spotify.position.x = -10
 				 spotify.position.z = -30;
+
+				 mixer = new THREE.AnimationMixer(spotify);
+
+				 var clip = THREE.AnimationClip.CreateFromMorphTargetSequence('spin', geometry.morphTargets, 24);
+				 mixer.clipAction(clip).setDuration(1).play;
+
 					 }
 
 				 //apple
@@ -306,6 +315,15 @@
 			 //stats.update();
 		 }
 		 function render() {
+
+			var prevTime = Date.now();
+
+			 if (mixer) {
+				 var time = Date.now();
+				 mixer.update((time - prevTime) * 0.001);
+				 prevTime = time;
+
+			 }
 			 particles.rotation.x += 0.0005;
 			 particles.rotation.y += 0.001;
 

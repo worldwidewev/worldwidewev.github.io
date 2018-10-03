@@ -122,7 +122,7 @@
 					camera.position.z = 85;
 
 					//lights
-					var light = new THREE.AmbientLight(0xffffff, 0.9);
+					var light = new THREE.AmbientLight(0xffffff, 1);
 					scene.add(light);
 
 					var light2 = new THREE.PointLight(0xffffff, 0.1);
@@ -331,11 +331,54 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						twitter.position.x = -20;
-						twitter.position.y = -12;
+
+
+						twitter.position.x = 0;
+						twitter.position.y = -10;
 						twitter.position.z = 6;
 					}
 					twitter = new THREE.Mesh(geometry, material);
+
+					loader.load('models/instagram.json', handle_load7);
+
+					function handle_load7(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						instagram = new THREE.Mesh(geometry, material);
+						scene.add(instagram);
+
+						DDDINK.addURL(instagram, "https://www.instagram.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						instagram.position.x = -20;
+						instagram.position.y = -10;
+						instagram.position.z = 6;
+					}
+					instagram = new THREE.Mesh(geometry, material)
+
+					loader.load('models/facebook.json', handle_load8);
+
+					function handle_load8(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						facebook = new THREE.Mesh(geometry, material);
+						scene.add(facebook);
+
+						DDDINK.addURL(facebook, "https://www.facebook.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						facebook.position.x = 20;
+						facebook.position.y = -10;
+						facebook.position.z = 6;
+					}
+					facebook = new THREE.Mesh(geometry, material)
+
 					scene.add( group );
 					//stats = new Stats();
 					//container.appendChild( stats.dom );
@@ -386,6 +429,8 @@
 					googleplay.rotation.y += -0.05;
 					soundcloud.rotation.y += -0.05;
 					twitter.rotation.y += -0.05;
+					instagram.rotation.y += -0.05;
+					facebook.rotation.y += -0.05;
 
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;

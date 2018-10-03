@@ -118,8 +118,8 @@
 
 					scene = new THREE.Scene();
 
-					camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-					camera.position.z = 20;
+					camera = new THREE.PerspectiveCamera(28, window.innerWidth / window.innerHeight, 1, 10000);
+					camera.position.z = 85;
 
 					//lights
 					var light = new THREE.AmbientLight(0xffffff, 0.9);
@@ -221,7 +221,7 @@
 
 						spotify.position.x = -8;
 						spotify.position.y = -12;
-						spotify.position.z = -30;
+						spotify.position.z = 30;
 
 					}
 
@@ -247,7 +247,7 @@
 
 						apple.position.x = 20;
 						apple.position.y = -12;
-						apple.position.z = -20;
+						apple.position.z = 30;
 					}
 					apple = new THREE.Mesh(geometry, material);
 
@@ -267,8 +267,8 @@
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 						soundcloud.position.x = 8;
-						soundcloud.position.y = -12;
-						soundcloud.position.z = -30;
+						soundcloud.position.y = -11;
+						soundcloud.position.z = 30;
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
 
@@ -291,7 +291,7 @@
 
 						googleplay.position.x = -20;
 						googleplay.position.y = -12;
-						googleplay.position.z = -20;
+						googleplay.position.z = 30;
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -299,7 +299,7 @@
 					//wevhead
 					loader.load('models/wevhead.json', handle_load5);
 
-					var wevhead;
+
 
 					function handle_load5(geometry, materials) {
 						var material = new THREE.MultiMaterial(materials);
@@ -311,9 +311,31 @@
 						wevhead.position.y = 30;
 						wevhead.position.z = -100;
 
-						wevhead.rotation.x = 0.7;
+						wevhead.rotation.x = 0.4;
 					}
 
+					wevhead = new THREE.Mesh(geometry, material);
+					//social
+
+					loader.load('models/twittercoin.json', handle_load6);
+
+					function handle_load6(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						twitter = new THREE.Mesh(geometry, material);
+						scene.add(twitter);
+
+						DDDINK.addURL(twitter, "https://www.twitter.com/worldwidewev_");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						twitter.position.x = -20;
+						twitter.position.y = -12;
+						twitter.position.z = 6;
+					}
+					twitter = new THREE.Mesh(geometry, material);
 					scene.add( group );
 					//stats = new Stats();
 					//container.appendChild( stats.dom );
@@ -356,11 +378,14 @@
 
 					var timer = Date.now() * 0.0005;
 
+					wevhead.lookAt(camera.position);
+
 
 					spotify.rotation.y += -0.05;
 					apple.rotation.y += -0.05;
 					googleplay.rotation.y += -0.05;
 					soundcloud.rotation.y += -0.05;
+					twitter.rotation.y += -0.05;
 
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;

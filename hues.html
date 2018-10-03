@@ -399,7 +399,7 @@
         if (!singleMaterial) {
         for (i = 0; i < nobjects; i++) { //if 0 is less than the number of spheres, which it will always be
           //s = (3600 * (i / nobjects + time) % 36) / 360;
-          h = (45 * (i / nobjects + time) % 360) / 180;
+          h = (45 * (i / 2 + time) % 360) / 180;
           materials[i].color.setHSL(h, 1, rms + 0.3);
         }
 

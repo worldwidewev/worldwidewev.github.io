@@ -202,7 +202,7 @@
 						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 					} else {
 						controls = new THREE.OrbitControls(camera, renderer.domElement);
-						controls.minPolarAngle = Math.PI/2 -0.2;
+						//controls.minPolarAngle = Math.PI/2 -0.2;
 						//controls.enablePan = false;
 						//controls.enableZoom = false;
 					}
@@ -462,6 +462,23 @@
 
 						wev.position.y = 50;
 						wev.position.z = -20;
+
+
+					}
+					wev = new THREE.Mesh(geometry, material)
+
+					loader.load('models/lookup.json', handle_load12);
+
+					function handle_load12(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						lookup = new THREE.Mesh(geometry, material);
+						scene.add(lookup);
+
+
+						lookup.position.y = -30;
+						lookup.position.z = -20;
 
 
 					}

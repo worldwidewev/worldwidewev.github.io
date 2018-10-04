@@ -28,6 +28,14 @@
 			color: #0800ff;
 		}
 
+
+
+		#container {
+
+			position: absolute;
+			top: 0;
+		}
+
 		#overlay {
 			position: absolute;
 			z-index: 1;
@@ -117,7 +125,9 @@
 					var container = document.getElementById('container');
 
 					scene = new THREE.Scene();
-					
+					scene.background = new THREE.Color( 0x0c0096 )
+
+
 
 					camera = new THREE.PerspectiveCamera(28, window.innerWidth / window.innerHeight, 1, 10000);
 					camera.position.z = 100;
@@ -380,6 +390,26 @@
 					}
 					facebook = new THREE.Mesh(geometry, material)
 
+					loader.load('models/thebag.json', handle_load9);
+
+					function handle_load9(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						thebag = new THREE.Mesh(geometry, material);
+						//scene.add(thebag);
+
+						DDDINK.addURL(thebag, "https://www.facebook.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						thebag.position.x = 9;
+						thebag.position.y = -6;
+						thebag.position.z = 16;
+					}
+					thebag = new THREE.Mesh(geometry, material)
+
 					scene.add( group );
 					//stats = new Stats();
 					//container.appendChild( stats.dom );
@@ -422,7 +452,7 @@
 
 					var timer = Date.now() * 0.0005;
 
-					wevhead.lookAt(camera.position);
+					//wevhead.lookAt(camera.position);
 
 
 					spotify.rotation.y += -0.05;
@@ -432,6 +462,7 @@
 					twitter.rotation.y += -0.05;
 					instagram.rotation.y += -0.05;
 					facebook.rotation.y += -0.05;
+					thebag.rotation.y += -0.05;
 
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;

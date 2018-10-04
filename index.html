@@ -206,7 +206,7 @@
 						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 					} else {
 						controls = new THREE.OrbitControls(camera, renderer.domElement);
-						controls.minPolarAngle = Math.PI/2 -0.2;
+						controls.minPolarAngle = Math.PI / 2 - 0.2;
 						controls.enablePan = false;
 						controls.enableZoom = false;
 					}
@@ -222,18 +222,18 @@
 
 					var WIDTH = window.innerWidth;
 					var HEIGHT = window.innerHeight;
-					var mirrorgeometry = new THREE.PlaneBufferGeometry( 35, 35 );
-					var verticalMirror = new THREE.Reflector( mirrorgeometry, {
+					var mirrorgeometry = new THREE.PlaneBufferGeometry(35, 35);
+					var verticalMirror = new THREE.Reflector(mirrorgeometry, {
 						clipBias: 0.003,
 						textureWidth: WIDTH * window.devicePixelRatio,
 						textureHeight: HEIGHT * window.devicePixelRatio,
 						color: 0x889999,
 						recursion: 1
-					} );
+					});
 					verticalMirror.position.y = 0;
-					verticalMirror.position.z =  30;
+					verticalMirror.position.z = 30;
 					verticalMirror.rotation.y = 3.14159;
-					scene.add( verticalMirror );
+					scene.add(verticalMirror);
 
 					//objects
 					//spotify
@@ -254,7 +254,7 @@
 						DDDINK.addURL(spotify, "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i");
 						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
 						spotify.userData.linkConfig.setShineOnMouse('ON')
-						spotify.userData.linkConfig.setNewTab( 'ON' );
+						spotify.userData.linkConfig.setNewTab('ON');
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
@@ -262,7 +262,7 @@
 						//spotify.position.x = -11;
 						spotify.position.y = -8;
 						spotify.position.z = -70;
-						spotify.scale.set( 1.75, 1.75, 1.75 );
+						spotify.scale.set(1.75, 1.75, 1.75);
 
 					}
 
@@ -287,7 +287,7 @@
 						soundcloud.position.x = 23;
 						soundcloud.position.y = -8;
 						soundcloud.position.z = -60;
-						soundcloud.scale.set( 1.75, 1.75, 1.75 );
+						soundcloud.scale.set(1.75, 1.75, 1.75);
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
 
@@ -309,7 +309,7 @@
 						apple.position.x = -23;
 						apple.position.y = -9;
 						apple.position.z = -60;
-						apple.scale.set( 1.75, 1.75, 1.75 );
+						apple.scale.set(1.75, 1.75, 1.75);
 					}
 					apple = new THREE.Mesh(geometry, material);
 
@@ -333,7 +333,7 @@
 						googleplay.position.x = -40;
 						googleplay.position.y = -8;
 						googleplay.position.z = -32;
-						googleplay.scale.set( 1.75, 1.75, 1.75 );
+						googleplay.scale.set(1.75, 1.75, 1.75);
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -378,7 +378,7 @@
 						twitter.position.x = 43;
 						twitter.position.y = -8;
 						twitter.position.z = -4;
-						twitter.scale.set( 1.75, 1.75, 1.75 );
+						twitter.scale.set(1.75, 1.75, 1.75);
 					}
 					twitter = new THREE.Mesh(geometry, material);
 
@@ -399,7 +399,7 @@
 						instagram.position.x = 40;
 						instagram.position.y = -8;
 						instagram.position.z = -32;
-						instagram.scale.set( 1.75, 1.75, 1.75 );
+						instagram.scale.set(1.75, 1.75, 1.75);
 					}
 					instagram = new THREE.Mesh(geometry, material)
 
@@ -420,7 +420,7 @@
 						facebook.position.x = -43;
 						facebook.position.y = -8;
 						facebook.position.z = -4;
-						facebook.scale.set( 1.75, 1.75, 1.75 );
+						facebook.scale.set(1.75, 1.75, 1.75);
 					}
 					facebook = new THREE.Mesh(geometry, material)
 
@@ -451,7 +451,7 @@
 
 						os.position.y = -11;
 						os.position.z = -45;
-						os.scale.set (1.25, 1.25, 1.25);
+						os.scale.set(1.25, 1.25, 1.25);
 
 					}
 					os = new THREE.Mesh(geometry, material)

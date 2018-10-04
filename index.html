@@ -18,8 +18,8 @@
 			overflow: hidden;
 			font-family: Courier;
 			overflow: hidden !important;
-			font-size: 0.9vw;
-			font-size: 1.5vh;
+			font-size: 13;
+
 			text-align: center;
 			font-weight: normal;
 			text-align: center;
@@ -76,6 +76,7 @@
 			font-family: Courier;
 			position: relative;
 			top: 85%;
+			left: 0;
 
 			width: 50em;
 			margin: 0 auto -2.1em;
@@ -89,7 +90,7 @@
 
 <body>
 	<div id="container"></div>
-	<div id="info">WEV Operating System Extended Edition <br> <br> Installation Version 2.3 <br> <br>  Look around...</div>
+
 
 
 	<script src="js/three.js"></script>
@@ -201,6 +202,9 @@
 						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 					} else {
 						controls = new THREE.OrbitControls(camera, renderer.domElement);
+						controls.minPolarAngle = Math.PI/2 -0.2;
+						//controls.enablePan = false;
+						//controls.enableZoom = false;
 					}
 
 					raycaster = new THREE.Raycaster();
@@ -223,7 +227,7 @@
 						recursion: 1
 					} );
 					verticalMirror.position.y = 0;
-					verticalMirror.position.z =  48;
+					verticalMirror.position.z =  30;
 					verticalMirror.rotation.y = 3.14159;
 					scene.add( verticalMirror );
 
@@ -250,7 +254,7 @@
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 
-						spotify.position.x = -11;
+						//spotify.position.x = -11;
 						spotify.position.y = -12;
 						spotify.position.z = -70;
 
@@ -274,9 +278,9 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						soundcloud.position.x = 11;
+						soundcloud.position.x = 23;
 						soundcloud.position.y = -11;
-						soundcloud.position.z = -70;
+						soundcloud.position.z = -60;
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
 
@@ -295,9 +299,9 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						apple.position.x = 26;
+						apple.position.x = -23;
 						apple.position.y = -12;
-						apple.position.z = -45;
+						apple.position.z = -60;
 					}
 					apple = new THREE.Mesh(geometry, material);
 
@@ -318,9 +322,9 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						googleplay.position.x = -26;
+						googleplay.position.x = -40;
 						googleplay.position.y = -12;
-						googleplay.position.z = -45;
+						googleplay.position.z = -32;
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -362,9 +366,9 @@
 
 
 
-						twitter.position.x = 0;
-						twitter.position.y = -10;
-						twitter.position.z = -94;
+						twitter.position.x = 43;
+						twitter.position.y = -12;
+						twitter.position.z = -4;
 					}
 					twitter = new THREE.Mesh(geometry, material);
 
@@ -382,9 +386,9 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						instagram.position.x = -20;
-						instagram.position.y = -10;
-						instagram.position.z = -94;
+						instagram.position.x = 40;
+						instagram.position.y = -12;
+						instagram.position.z = -32;
 					}
 					instagram = new THREE.Mesh(geometry, material)
 
@@ -402,9 +406,9 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						facebook.position.x = 20;
-						facebook.position.y = -10;
-						facebook.position.z = -94;
+						facebook.position.x = -43;
+						facebook.position.y = -12;
+						facebook.position.z = -4;
 					}
 					facebook = new THREE.Mesh(geometry, material)
 
@@ -422,6 +426,22 @@
 						thecamera.position.z = 0;
 					}
 					thecamera = new THREE.Mesh(geometry, material)
+
+					loader.load('models/OStext.json', handle_load10);
+
+					function handle_load10(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						os = new THREE.Mesh(geometry, material);
+						scene.add(os);
+
+
+						os.position.y = -11;
+						os.position.z = -45;
+
+					}
+					os = new THREE.Mesh(geometry, material)
 
 					scene.add(group);
 					//stats = new Stats();

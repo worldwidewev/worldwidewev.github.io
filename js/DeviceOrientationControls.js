@@ -35,13 +35,13 @@ THREE.DeviceOrientationControls = function ( object ) {
 
 	var setObjectQuaternion = function () {
 
-		var zee = new THREE.Vector3( 0, -2, 1 );
+		var zee = new THREE.Vector3( 0, 0, 1 );
 
 		var euler = new THREE.Euler();
 
 		var q0 = new THREE.Quaternion();
 
-		var q1 = new THREE.Quaternion( - Math.sqrt( 0.3 ), 0, 0, Math.sqrt( 0.3 ) ); // - PI/2 around the x-axis
+		var q1 = new THREE.Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
 
 		return function ( quaternion, alpha, beta, gamma, orient ) {
 

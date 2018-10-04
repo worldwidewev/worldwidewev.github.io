@@ -19,8 +19,9 @@
 			font-family: Courier;
 			overflow: hidden !important;
 			font-size: 0.9vw;
+			font-size: 1.5vh;
 			text-align: center;
-			font-weight: bold;
+			font-weight: normal;
 			text-align: center;
 		}
 
@@ -249,7 +250,7 @@
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
 
-						spotify.position.x = -8;
+						spotify.position.x = -11;
 						spotify.position.y = -12;
 						spotify.position.z = -70;
 
@@ -257,29 +258,6 @@
 
 					spotify = new THREE.Mesh(geometry, material);
 
-
-
-
-					//apple
-					loader.load('models/applemusiccoin.json', handle_load2);
-
-					function handle_load2(geometry, materials) {
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						apple = new THREE.Mesh(geometry, material);
-						scene.add(apple);
-
-						DDDINK.addURL(apple, "https://itunes.apple.com/us/artist/wev/1356660469");
-						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
-						DDDINK.readRendererObj(renderer, scene, camera);
-						DDDINK.domEvent.addFnc('Fn', 'A');
-
-						apple.position.x = 20;
-						apple.position.y = -12;
-						apple.position.z = -70;
-					}
-					apple = new THREE.Mesh(geometry, material);
 
 					//soundcloud
 					loader.load('models/soundcloudcoin.json', handle_load3);
@@ -296,11 +274,32 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						soundcloud.position.x = 8;
+						soundcloud.position.x = 11;
 						soundcloud.position.y = -11;
 						soundcloud.position.z = -70;
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
+
+					//apple
+					loader.load('models/applemusiccoin.json', handle_load2);
+
+					function handle_load2(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						apple = new THREE.Mesh(geometry, material);
+						scene.add(apple);
+
+						DDDINK.addURL(apple, "https://itunes.apple.com/us/artist/wev/1356660469");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						apple.position.x = 26;
+						apple.position.y = -12;
+						apple.position.z = -45;
+					}
+					apple = new THREE.Mesh(geometry, material);
 
 					//googleplay
 					loader.load('models/googleplaycoin.json', handle_load4);
@@ -319,9 +318,9 @@
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						googleplay.position.x = -20;
+						googleplay.position.x = -26;
 						googleplay.position.y = -12;
-						googleplay.position.z = -70;
+						googleplay.position.z = -45;
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -420,7 +419,7 @@
 
 
 						thecamera.position.y = -6;
-						thecamera.position.z = 1;
+						thecamera.position.z = 0;
 					}
 					thecamera = new THREE.Mesh(geometry, material)
 

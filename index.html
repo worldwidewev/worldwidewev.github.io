@@ -133,8 +133,8 @@
 
 
 
-					camera = new THREE.PerspectiveCamera(28, window.innerWidth / window.innerHeight, 1, 10000);
-					camera.position.z = 100;
+					camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000);
+					camera.position.z = 1;
 
 					//lights
 					var light = new THREE.AmbientLight(0xffffff, 1);
@@ -251,7 +251,7 @@
 
 						spotify.position.x = -8;
 						spotify.position.y = -12;
-						spotify.position.z = 30;
+						spotify.position.z = -70;
 
 					}
 
@@ -277,7 +277,7 @@
 
 						apple.position.x = 20;
 						apple.position.y = -12;
-						apple.position.z = 30;
+						apple.position.z = -70;
 					}
 					apple = new THREE.Mesh(geometry, material);
 
@@ -298,7 +298,7 @@
 
 						soundcloud.position.x = 8;
 						soundcloud.position.y = -11;
-						soundcloud.position.z = 30;
+						soundcloud.position.z = -70;
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
 
@@ -321,7 +321,7 @@
 
 						googleplay.position.x = -20;
 						googleplay.position.y = -12;
-						googleplay.position.z = 30;
+						googleplay.position.z = -70;
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -339,7 +339,7 @@
 						scene.add(wevhead);
 
 						wevhead.position.y = 30;
-						wevhead.position.z = -120;
+						wevhead.position.z = -220;
 
 						wevhead.rotation.x = 0.4;
 					}
@@ -365,7 +365,7 @@
 
 						twitter.position.x = 0;
 						twitter.position.y = -10;
-						twitter.position.z = 6;
+						twitter.position.z = -94;
 					}
 					twitter = new THREE.Mesh(geometry, material);
 
@@ -385,7 +385,7 @@
 
 						instagram.position.x = -20;
 						instagram.position.y = -10;
-						instagram.position.z = 6;
+						instagram.position.z = -94;
 					}
 					instagram = new THREE.Mesh(geometry, material)
 
@@ -405,7 +405,7 @@
 
 						facebook.position.x = 20;
 						facebook.position.y = -10;
-						facebook.position.z = 6;
+						facebook.position.z = -94;
 					}
 					facebook = new THREE.Mesh(geometry, material)
 

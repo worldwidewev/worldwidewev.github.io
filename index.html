@@ -32,8 +32,10 @@
 
 
 		#container {
-
-			position: absolute;
+			position: fixed !important;
+			overflow: hidden !important;
+			width: 100% !important;
+			height: 100% !important;
 			top: 0;
 		}
 
@@ -131,7 +133,7 @@
 					var container = document.getElementById('container');
 
 					scene = new THREE.Scene();
-					scene.background = new THREE.Color( 0x0c0096 )
+					//scene.background = new THREE.Color( 0x0c0096 )
 
 
 
@@ -250,6 +252,7 @@
 						DDDINK.addURL(spotify, "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i");
 						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
 						spotify.userData.linkConfig.setShineOnMouse('ON')
+						spotify.userData.linkConfig.setNewTab( 'ON' );
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 

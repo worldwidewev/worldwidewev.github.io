@@ -136,7 +136,7 @@
 
 
 					camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
-					camera.position.z = 0.01;
+					camera.position.z = 6;
 
 					//lights
 					var light = new THREE.AmbientLight(0xffffff, 1);
@@ -257,6 +257,7 @@
 						//spotify.position.x = -11;
 						spotify.position.y = -8;
 						spotify.position.z = -70;
+						spotify.scale.set( 1.75, 1.75, 1.75 );
 
 					}
 
@@ -281,6 +282,7 @@
 						soundcloud.position.x = 23;
 						soundcloud.position.y = -8;
 						soundcloud.position.z = -60;
+						soundcloud.scale.set( 1.75, 1.75, 1.75 );
 					}
 					soundcloud = new THREE.Mesh(geometry, material);
 
@@ -302,6 +304,7 @@
 						apple.position.x = -23;
 						apple.position.y = -9;
 						apple.position.z = -60;
+						apple.scale.set( 1.75, 1.75, 1.75 );
 					}
 					apple = new THREE.Mesh(geometry, material);
 
@@ -325,6 +328,7 @@
 						googleplay.position.x = -40;
 						googleplay.position.y = -8;
 						googleplay.position.z = -32;
+						googleplay.scale.set( 1.75, 1.75, 1.75 );
 					}
 
 					googleplay = new THREE.Mesh(geometry, material);
@@ -341,7 +345,7 @@
 						wevhead = new THREE.Mesh(geometry, material);
 						scene.add(wevhead);
 
-						wevhead.position.y = 20;
+						wevhead.position.y = 25;
 						wevhead.position.z = -150;
 
 						wevhead.rotation.x = 0.4;
@@ -369,6 +373,7 @@
 						twitter.position.x = 43;
 						twitter.position.y = -8;
 						twitter.position.z = -4;
+						twitter.scale.set( 1.75, 1.75, 1.75 );
 					}
 					twitter = new THREE.Mesh(geometry, material);
 
@@ -389,6 +394,7 @@
 						instagram.position.x = 40;
 						instagram.position.y = -8;
 						instagram.position.z = -32;
+						instagram.scale.set( 1.75, 1.75, 1.75 );
 					}
 					instagram = new THREE.Mesh(geometry, material)
 
@@ -409,6 +415,7 @@
 						facebook.position.x = -43;
 						facebook.position.y = -8;
 						facebook.position.z = -4;
+						facebook.scale.set( 1.75, 1.75, 1.75 );
 					}
 					facebook = new THREE.Mesh(geometry, material)
 
@@ -422,7 +429,7 @@
 						scene.add(thecamera);
 
 
-						thecamera.position.y = 1;
+						thecamera.position.y = -8;
 						thecamera.position.z = -2;
 					}
 					thecamera = new THREE.Mesh(geometry, material)

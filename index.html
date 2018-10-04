@@ -18,7 +18,7 @@
 			overflow: hidden;
 			font-family: Courier;
 			overflow: hidden !important;
-			font-size: 0.75vw;
+			font-size: 0.9vw;
 			text-align: center;
 			font-weight: bold;
 			text-align: center;
@@ -74,7 +74,7 @@
 			color: #fff;
 			font-family: Courier;
 			position: relative;
-			top: 50%;
+			top: 85%;
 
 			width: 50em;
 			margin: 0 auto -2.1em;
@@ -88,7 +88,7 @@
 
 <body>
 	<div id="container"></div>
-	<div id="info">WEV Operating System Extended Edition <br> Installation Version 2.3</div>
+	<div id="info">WEV Operating System Extended Edition <br> <br> Installation Version 2.3 <br> <br>  Look around...</div>
 
 
 	<script src="js/three.js"></script>
@@ -213,7 +213,7 @@
 
 					var WIDTH = window.innerWidth;
 					var HEIGHT = window.innerHeight;
-					var mirrorgeometry = new THREE.PlaneBufferGeometry( 50, 50 );
+					var mirrorgeometry = new THREE.PlaneBufferGeometry( 35, 35 );
 					var verticalMirror = new THREE.Reflector( mirrorgeometry, {
 						clipBias: 0.003,
 						textureWidth: WIDTH * window.devicePixelRatio,
@@ -222,7 +222,7 @@
 						recursion: 1
 					} );
 					verticalMirror.position.y = 0;
-					verticalMirror.position.z =  90;
+					verticalMirror.position.z =  48;
 					verticalMirror.rotation.y = 3.14159;
 					scene.add( verticalMirror );
 
@@ -409,25 +409,20 @@
 					}
 					facebook = new THREE.Mesh(geometry, material)
 
-					loader.load('models/thebag.json', handle_load9);
+					loader.load('models/camera.json', handle_load9);
 
 					function handle_load9(geometry, materials) {
 						var material = new THREE.MultiMaterial(materials);
 						material.morphTargets = true;
 
-						thebag = new THREE.Mesh(geometry, material);
-						//scene.add(thebag);
+						thecamera = new THREE.Mesh(geometry, material);
+						scene.add(thecamera);
 
-						DDDINK.addURL(thebag, "https://www.facebook.com/worldwidewev");
-						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
-						DDDINK.readRendererObj(renderer, scene, camera);
-						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						thebag.position.x = 9;
-						thebag.position.y = -6;
-						thebag.position.z = 16;
+						thecamera.position.y = -6;
+						thecamera.position.z = 1;
 					}
-					thebag = new THREE.Mesh(geometry, material)
+					thecamera = new THREE.Mesh(geometry, material)
 
 					scene.add(group);
 					//stats = new Stats();
@@ -471,7 +466,7 @@
 
 					var timer = Date.now() * 0.0005;
 
-					//wevhead.lookAt(camera.position);
+					thecamera.lookAt(camera.position);
 
 
 					spotify.rotation.y += -0.05;
@@ -481,7 +476,7 @@
 					twitter.rotation.y += -0.05;
 					instagram.rotation.y += -0.05;
 					facebook.rotation.y += -0.05;
-					thebag.rotation.y += -0.05;
+
 
 					particles.rotation.x += 0.0005;
 					particles.rotation.y += 0.001;

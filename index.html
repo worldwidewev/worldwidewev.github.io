@@ -18,7 +18,7 @@
 			overflow: hidden;
 			font-family: Courier;
 			overflow: hidden !important;
-			font-size: 13px;
+			font-size: 0.75vw;
 			text-align: center;
 			font-weight: bold;
 			text-align: center;
@@ -95,6 +95,7 @@
 	<script src="js/3Dink.js"></script>
 	<script src="js/DeviceOrientationControls.js"></script>
 	<script src="js/OrbitControls.js"></script>
+	<script src="js/Reflector.js"></script>
 
 	<script src="js/WebGL.js"></script>
 	<script src="js/stats.min.js"></script>
@@ -210,7 +211,20 @@
 
 					var group = new THREE.Group();
 
-
+					var WIDTH = window.innerWidth;
+					var HEIGHT = window.innerHeight;
+					var mirrorgeometry = new THREE.PlaneBufferGeometry( 50, 50 );
+					var verticalMirror = new THREE.Reflector( mirrorgeometry, {
+						clipBias: 0.003,
+						textureWidth: WIDTH * window.devicePixelRatio,
+						textureHeight: HEIGHT * window.devicePixelRatio,
+						color: 0x889999,
+						recursion: 1
+					} );
+					verticalMirror.position.y = 0;
+					verticalMirror.position.z =  90;
+					verticalMirror.rotation.y = 3.14159;
+					scene.add( verticalMirror );
 
 					//objects
 					//spotify
@@ -325,7 +339,7 @@
 						scene.add(wevhead);
 
 						wevhead.position.y = 30;
-						wevhead.position.z = -100;
+						wevhead.position.z = -120;
 
 						wevhead.rotation.x = 0.4;
 					}

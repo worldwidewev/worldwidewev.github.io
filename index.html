@@ -136,7 +136,7 @@
 
 
 					camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
-					camera.position.z = 6;
+					camera.position.z = 0.01;
 
 					//lights
 					var light = new THREE.AmbientLight(0xffffff, 1);
@@ -423,7 +423,7 @@
 
 
 						thecamera.position.y = -6;
-						thecamera.position.z = 0;
+						thecamera.position.z = -2;
 					}
 					thecamera = new THREE.Mesh(geometry, material)
 
@@ -442,6 +442,24 @@
 
 					}
 					os = new THREE.Mesh(geometry, material)
+
+					loader.load('models/WEV.json', handle_load11);
+
+					function handle_load11(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						wev = new THREE.Mesh(geometry, material);
+						scene.add(wev);
+
+
+						wev.position.y = 50;
+						wev.position.z = -20;
+
+
+					}
+					wev = new THREE.Mesh(geometry, material)
+
 
 					scene.add(group);
 					//stats = new Stats();

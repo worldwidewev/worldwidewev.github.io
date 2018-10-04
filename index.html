@@ -202,9 +202,9 @@
 						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 					} else {
 						controls = new THREE.OrbitControls(camera, renderer.domElement);
-						//controls.minPolarAngle = Math.PI/2 -0.2;
-						//controls.enablePan = false;
-						//controls.enableZoom = false;
+						controls.minPolarAngle = Math.PI/2 -0.2;
+						controls.enablePan = false;
+						controls.enableZoom = false;
 					}
 
 					raycaster = new THREE.Raycaster();
@@ -446,6 +446,7 @@
 
 						os.position.y = -11;
 						os.position.z = -45;
+						os.scale.set (1.25, 1.25, 1.25);
 
 					}
 					os = new THREE.Mesh(geometry, material)

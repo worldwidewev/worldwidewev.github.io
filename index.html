@@ -16,7 +16,7 @@
 			background-color: #000000;
 			margin: 0px;
 			overflow: hidden;
-			font-family: Monospace;
+			font-family: Courier;
 			overflow: hidden !important;
 			font-size: 13px;
 			text-align: center;
@@ -72,8 +72,9 @@
 
 		#info {
 			color: #fff;
+			font-family: Courier;
 			position: relative;
-			top: 0px;
+			top: 400px;
 			width: 50em;
 			margin: 0 auto -2.1em;
 			padding: 5px;
@@ -86,6 +87,7 @@
 
 <body>
 	<div id="container"></div>
+	<div id="info">WEV Operating System Extended Edition <br> Installation Version 2.3</div>
 
 
 	<script src="js/three.js"></script>
@@ -207,6 +209,8 @@
 
 					var group = new THREE.Group();
 
+
+
 					//objects
 					//spotify
 					loader.load('models/spotifycoin.json', handle_load1);
@@ -221,7 +225,7 @@
 
 
 						scene.add(spotify);
-						group.add (spotify);
+						group.add(spotify);
 
 						DDDINK.addURL(spotify, "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i");
 						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
@@ -410,7 +414,7 @@
 					}
 					thebag = new THREE.Mesh(geometry, material)
 
-					scene.add( group );
+					scene.add(group);
 					//stats = new Stats();
 					//container.appendChild( stats.dom );
 

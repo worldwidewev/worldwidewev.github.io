@@ -35,7 +35,7 @@ THREE.DeviceOrientationControls = function ( object ) {
 
 	var setObjectQuaternion = function () {
 
-		var zee = new THREE.Vector3( 0, 0, 1 );
+		var zee = new THREE.Vector3( 0, -2, 1 );
 
 		var euler = new THREE.Euler();
 

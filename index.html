@@ -424,20 +424,46 @@
 					}
 					facebook = new THREE.Mesh(geometry, material)
 
-					loader.load('models/camera.json', handle_load9);
+					loader.load('models/cart.json', handle_load9);
 
 					function handle_load9(geometry, materials) {
 						var material = new THREE.MultiMaterial(materials);
 						material.morphTargets = true;
 
-						thecamera = new THREE.Mesh(geometry, material);
-						//scene.add(thecamera);
+						cart = new THREE.Mesh(geometry, material);
+						scene.add(cart);
 
 
-						thecamera.position.y = -8;
-						thecamera.position.z = -2;
+						DDDINK.addURL(cart, "https://worldwidewev.bigcartel.com/");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						cart.position.x = -23;
+						cart.position.y = 10;
+						cart.position.z = -30;
 					}
-					thecamera = new THREE.Mesh(geometry, material)
+					cart = new THREE.Mesh(geometry, material)
+
+					loader.load('models/mail.json', handle_load13);
+
+					function handle_load13(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						mail = new THREE.Mesh(geometry, material);
+						scene.add(mail);
+
+						DDDINK.addURL(mail, "mailto:hello@wev.world/");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						mail.position.x = 23;
+						mail.position.y = 10;
+						mail.position.z = -30;
+					}
+					mail = new THREE.Mesh(geometry, material)
 
 					loader.load('models/OStext.json', handle_load10);
 
@@ -533,7 +559,7 @@
 
 					var timer = Date.now() * 0.0005;
 
-					thecamera.lookAt(camera.position);
+					//thecamera.lookAt(camera.position);
 
 
 					spotify.rotation.y += -0.05;
@@ -543,6 +569,8 @@
 					twitter.rotation.y += -0.05;
 					instagram.rotation.y += -0.05;
 					facebook.rotation.y += -0.05;
+					cart.rotation.y += -0.05;
+					mail.rotation.y += -0.05;
 
 
 					particles.rotation.x += 0.0005;

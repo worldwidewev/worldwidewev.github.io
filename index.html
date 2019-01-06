@@ -89,11 +89,20 @@
 			::-webkit-scrollbar {
 				display: none;
 			}
+
+			.loader {
+
+				position: fixed;
+				z-index: 99;
+
+			}
 	</style>
 </head>
 
 <body>
+
 	<div id="container"></div>
+
 
 
 
@@ -349,6 +358,11 @@
 
 						wevhead = new THREE.Mesh(geometry, material);
 						scene.add(wevhead);
+
+						DDDINK.addURL(wevhead, "https://distrokid.com/hyperfollow/wev/gbMx");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
 
 						wevhead.position.y = 25;
 						wevhead.position.z = -150;

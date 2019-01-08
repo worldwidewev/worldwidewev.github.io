@@ -1,0 +1,633 @@
+\
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>worldwidewev</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<link rel="shortcut icon" type="image/x-icon" href="img/W-3D2.ico">
+	<style>
+		body {
+			position: fixed !important;
+			overflow: hidden !important;
+			width: 100% !important;
+			height: 100% !important;
+
+			background-color: #000000;
+			margin: 0px;
+			overflow: hidden;
+			font-family: Courier;
+			overflow: hidden !important;
+			font-size: 13;
+
+			text-align: center;
+			font-weight: normal;
+			text-align: center;
+		}
+
+		a {
+			color: #0800ff;
+		}
+
+
+
+		#container {
+			position: fixed !important;
+			overflow: hidden !important;
+			width: 100% !important;
+			height: 100% !important;
+			top: 0;
+		}
+
+		#overlay {
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 1;
+			background-color: #000000;
+			color: #ffffff;
+		}
+
+		#overlay>div {
+			text-align: center;
+		}
+
+		#overlay>div>button {
+			height: 20px;
+			width: 100px;
+			background: transparent;
+			color: #ffffff;
+			outline: 1px solid #ffffff;
+			border: 0px;
+			cursor: pointer;
+		}
+
+		#overlay>div>p {
+			color: #777777;
+			font-size: 12px;
+		}
+
+		#info {
+			color: #fff;
+			font-family: Courier;
+			position: relative;
+			top: 85%;
+			left: 0;
+
+			width: 50em;
+			margin: 0 auto -2.1em;
+			padding: 5px;
+			z-index: 100;
+			::-webkit-scrollbar {
+				display: none;
+			}
+
+			.loader {
+
+				position: fixed;
+				z-index: 99;
+
+			}
+	</style>
+</head>
+
+<body>
+
+	<div id="container"></div>
+
+
+
+
+	<script src="js/three.js"></script>
+	<script src="js/3Dink.js"></script>
+	<script src="js/DeviceOrientationControls.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/Reflector.js"></script>
+
+	<script src="js/WebGL.js"></script>
+	<script src="js/stats.min.js"></script>
+
+	<script type="x-shader/x-vertex" id="vertexshader">
+		attribute float size; attribute vec3 customColor; varying vec3 vColor; void main() { vColor = customColor; vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 ); gl_PointSize = size * ( 300.0 / -mvPosition.z ); gl_Position = projectionMatrix * mvPosition;
+		}
+	</script>
+
+	<script type="x-shader/x-fragment" id="fragmentshader">
+		uniform vec3 color; uniform sampler2D texture; varying vec3 vColor; void main() { gl_FragColor = vec4( color * vColor, 1.0 ); gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord ); if ( gl_FragColor.a
+		< ALPHATEST ) discard; } </script>
+
+
+			<script>
+				if (WEBGL.isWebGLAvailable() === false) {
+					document.body.appendChild(WEBGL.getWebGLErrorMessage());
+				}
+
+				var renderer, scene, camera, stats, controls;
+				var container, stats, clock, mixer;
+				var particles, uniforms;
+				var PARTICLE_SIZE = 20;
+				var raycaster, intersects;
+				var coins = [];
+				var mouse, INTERSECTED;
+				init();
+				animate();
+
+				function init() {
+					var container = document.getElementById('container');
+
+					scene = new THREE.Scene();
+					//scene.background = new THREE.Color( 0x0c0096 )
+
+
+
+					camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
+					camera.position.z = 6;
+
+					//lights
+					var light = new THREE.AmbientLight(0xffffff, 1);
+					scene.add(light);
+
+					var light2 = new THREE.PointLight(0xffffff, 0.1);
+					scene.add(light2);
+
+					//
+					var vertices = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16).vertices;
+					var positions = new Float32Array(vertices.length * 3);
+					var colors = new Float32Array(vertices.length * 3);
+					var sizes = new Float32Array(vertices.length);
+					var vertex;
+					var color = new THREE.Color();
+					for (var i = 0, l = vertices.length; i < l; i++) {
+						vertex = vertices[i];
+						vertex.toArray(positions, i * 3);
+
+						color.toArray(colors, i * 3);
+						sizes[i] = PARTICLE_SIZE * 0.5;
+					}
+					var geometry = new THREE.BufferGeometry();
+					geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+					geometry.addAttribute('customColor', new THREE.BufferAttribute(colors, 3));
+					geometry.addAttribute('size', new THREE.BufferAttribute(sizes, 1));
+					//
+					var material = new THREE.ShaderMaterial({
+						uniforms: {
+							color: {
+								value: new THREE.Color(0xffffff)
+							},
+							texture: {
+								value: new THREE.TextureLoader().load("textures/star.png")
+							}
+						},
+						vertexShader: document.getElementById('vertexshader').textContent,
+						fragmentShader: document.getElementById('fragmentshader').textContent,
+						alphaTest: 0.9
+					});
+					//
+					particles = new THREE.Points(geometry, material);
+					scene.add(particles);
+					//
+					renderer = new THREE.WebGLRenderer();
+					renderer.setPixelRatio(window.devicePixelRatio);
+					renderer.setSize(window.innerWidth, window.innerHeight);
+					container.appendChild(renderer.domElement);
+					//
+					window.mobilecheck = function() {
+						var check = false;
+						(function(a) {
+							if (
+								/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i
+								.test(a) ||
+								/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i
+								.test(a.substr(0, 4))) check = true;
+						})(navigator.userAgent || navigator.vendor || window.opera);
+						return check;
+					};
+
+					if (window.mobilecheck() == true) {
+						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
+					} else {
+						controls = new THREE.OrbitControls(camera, renderer.domElement);
+						controls.minPolarAngle = Math.PI / 2 - 0.2;
+						controls.enablePan = false;
+						controls.enableZoom = false;
+					}
+
+					raycaster = new THREE.Raycaster();
+
+					mouse = new THREE.Vector2();
+
+					//
+					var loader = new THREE.JSONLoader();
+
+					var group = new THREE.Group();
+
+					var WIDTH = window.innerWidth;
+					var HEIGHT = window.innerHeight;
+					var mirrorgeometry = new THREE.PlaneBufferGeometry(35, 35);
+					var verticalMirror = new THREE.Reflector(mirrorgeometry, {
+						clipBias: 0.003,
+						textureWidth: WIDTH * window.devicePixelRatio,
+						textureHeight: HEIGHT * window.devicePixelRatio,
+						color: 0x889999,
+						recursion: 1
+					});
+					verticalMirror.position.y = 0;
+					verticalMirror.position.z = 30;
+					verticalMirror.rotation.y = 3.14159;
+					scene.add(verticalMirror);
+
+					//objects
+					//spotify
+					loader.load('models/spotifycoin.json', handle_load1);
+
+					function handle_load1(geometry, materials) {
+
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						spotify = new THREE.Mesh(geometry, material);
+						//spotify.userData = {URL: "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i"};
+
+
+						scene.add(spotify);
+						group.add(spotify);
+
+						DDDINK.addURL(spotify, "https://open.spotify.com/artist/1KpEYlQPQN64r0aRE9Wg6i");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						spotify.userData.linkConfig.setShineOnMouse('ON')
+						spotify.userData.linkConfig.setNewTab('ON');
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+
+						//spotify.position.x = -11;
+						spotify.position.y = -8;
+						spotify.position.z = -70;
+						spotify.scale.set(1.75, 1.75, 1.75);
+
+					}
+
+					spotify = new THREE.Mesh(geometry, material);
+
+
+					//soundcloud
+					loader.load('models/soundcloudcoin.json', handle_load3);
+
+					function handle_load3(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						soundcloud = new THREE.Mesh(geometry, material);
+						scene.add(soundcloud);
+
+						DDDINK.addURL(soundcloud, "https://soundcloud.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						soundcloud.position.x = 23;
+						soundcloud.position.y = -8;
+						soundcloud.position.z = -60;
+						soundcloud.scale.set(1.75, 1.75, 1.75);
+					}
+					soundcloud = new THREE.Mesh(geometry, material);
+
+					//apple
+					loader.load('models/applemusiccoin.json', handle_load2);
+
+					function handle_load2(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						apple = new THREE.Mesh(geometry, material);
+						scene.add(apple);
+
+						DDDINK.addURL(apple, "https://itunes.apple.com/us/artist/wev/1356660469");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						apple.position.x = -23;
+						apple.position.y = -9;
+						apple.position.z = -60;
+						apple.scale.set(1.75, 1.75, 1.75);
+					}
+					apple = new THREE.Mesh(geometry, material);
+
+					//googleplay
+					loader.load('models/googleplaycoin.json', handle_load4);
+
+
+
+					function handle_load4(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						googleplay = new THREE.Mesh(geometry, material);
+						scene.add(googleplay);
+
+						DDDINK.addURL(googleplay, "https://play.google.com/store/music/artist/wev?id=A4p35kupb7hb7jnavvq7a7fqjka");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						googleplay.position.x = -40;
+						googleplay.position.y = -8;
+						googleplay.position.z = -32;
+						googleplay.scale.set(1.75, 1.75, 1.75);
+					}
+
+					googleplay = new THREE.Mesh(geometry, material);
+
+					//wevhead
+					loader.load('models/wevhead.json', handle_load5);
+
+
+
+					function handle_load5(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						wevhead = new THREE.Mesh(geometry, material);
+						scene.add(wevhead);
+
+						DDDINK.addURL(wevhead, "https://distrokid.com/hyperfollow/wev/gbMx");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						wevhead.position.y = 25;
+						wevhead.position.z = -150;
+
+						wevhead.rotation.x = 0.4;
+					}
+
+					wevhead = new THREE.Mesh(geometry, material);
+					//social
+
+					loader.load('models/twittercoin.json', handle_load6);
+
+					function handle_load6(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						twitter = new THREE.Mesh(geometry, material);
+						scene.add(twitter);
+
+						DDDINK.addURL(twitter, "https://www.twitter.com/worldwidewev_");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+
+
+						twitter.position.x = 43;
+						twitter.position.y = -8;
+						twitter.position.z = -4;
+						twitter.scale.set(1.75, 1.75, 1.75);
+					}
+					twitter = new THREE.Mesh(geometry, material);
+
+					loader.load('models/instagram.json', handle_load7);
+
+					function handle_load7(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						instagram = new THREE.Mesh(geometry, material);
+						scene.add(instagram);
+
+						DDDINK.addURL(instagram, "https://www.instagram.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						instagram.position.x = 40;
+						instagram.position.y = -8;
+						instagram.position.z = -32;
+						instagram.scale.set(1.75, 1.75, 1.75);
+					}
+					instagram = new THREE.Mesh(geometry, material)
+
+					loader.load('models/facebook.json', handle_load8);
+
+					function handle_load8(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						facebook = new THREE.Mesh(geometry, material);
+						scene.add(facebook);
+
+						DDDINK.addURL(facebook, "https://www.facebook.com/worldwidewev");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						facebook.position.x = -43;
+						facebook.position.y = -8;
+						facebook.position.z = -4;
+						facebook.scale.set(1.75, 1.75, 1.75);
+					}
+					facebook = new THREE.Mesh(geometry, material)
+
+					loader.load('models/cart.json', handle_load9);
+
+					function handle_load9(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						cart = new THREE.Mesh(geometry, material);
+						scene.add(cart);
+
+
+						DDDINK.addURL(cart, "https://worldwidewev.bigcartel.com/");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						cart.position.x = -23;
+						cart.position.y = 10;
+						cart.position.z = -30;
+					}
+					cart = new THREE.Mesh(geometry, material)
+
+					loader.load('models/mail.json', handle_load13);
+
+					function handle_load13(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						mail = new THREE.Mesh(geometry, material);
+						scene.add(mail);
+
+						DDDINK.addURL(mail, "mailto:hello@wev.world/");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
+
+						mail.position.x = 23;
+						mail.position.y = 10;
+						mail.position.z = -30;
+					}
+					mail = new THREE.Mesh(geometry, material)
+
+					loader.load('models/OStext.json', handle_load10);
+
+					function handle_load10(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						os = new THREE.Mesh(geometry, material);
+						scene.add(os);
+
+
+						os.position.y = -11;
+						os.position.z = -45;
+						os.scale.set(1.25, 1.25, 1.25);
+
+					}
+					os = new THREE.Mesh(geometry, material)
+
+					loader.load('models/presave.json', handle_load17);
+
+					function handle_load17(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						presave = new THREE.Mesh(geometry, material);
+						scene.add(presave);
+
+
+						presave.position.y = 17;
+						presave.position.z = -45;
+						presave.scale.set(1.25, 1.25, 1.25);
+
+					}
+					presave = new THREE.Mesh(geometry, material)
+
+					loader.load('models/WEV.json', handle_load11);
+
+					function handle_load11(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						wev = new THREE.Mesh(geometry, material);
+						scene.add(wev);
+
+
+						wev.position.y = 50;
+						wev.position.z = -20;
+
+
+					}
+					wev = new THREE.Mesh(geometry, material)
+
+					loader.load('models/lookup.json', handle_load12);
+
+					function handle_load12(geometry, materials) {
+						var material = new THREE.MultiMaterial(materials);
+						material.morphTargets = true;
+
+						lookup = new THREE.Mesh(geometry, material);
+						scene.add(lookup);
+
+
+						lookup.position.y = -30;
+						lookup.position.z = -20;
+
+
+					}
+					wev = new THREE.Mesh(geometry, material)
+
+
+					scene.add(group);
+					//stats = new Stats();
+					//container.appendChild( stats.dom );
+
+					window.addEventListener('resize', onWindowResize, false);
+					document.addEventListener('mousemove', onDocumentMouseMove, false);
+				}
+
+
+
+				function onDocumentMouseMove(event) {
+					event.preventDefault();
+					mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+					mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+				}
+
+				function onWindowResize() {
+					camera.aspect = window.innerWidth / window.innerHeight;
+					camera.updateProjectionMatrix();
+					renderer.setSize(window.innerWidth, window.innerHeight);
+				}
+
+				function animate() {
+					requestAnimationFrame(animate);
+
+					controls.update();
+					render();
+					//stats.update();
+				}
+
+				var prevTime = Date.now();
+
+				if (mixer) {
+					var time = Date.now();
+					mixer.update((time - prevTime) * 0.001);
+					prevTime = time;
+				}
+
+				function render() {
+
+					var timer = Date.now() * 0.0005;
+
+					//thecamera.lookAt(camera.position);
+
+
+					spotify.rotation.y += -0.05;
+					apple.rotation.y += -0.05;
+					googleplay.rotation.y += -0.05;
+					soundcloud.rotation.y += -0.05;
+					twitter.rotation.y += -0.05;
+					instagram.rotation.y += -0.05;
+					facebook.rotation.y += -0.05;
+					cart.rotation.y += -0.05;
+					mail.rotation.y += -0.05;
+
+
+					particles.rotation.x += 0.0005;
+					particles.rotation.y += 0.001;
+
+					var geometry = particles.geometry;
+					var attributes = geometry.attributes;
+					raycaster.setFromCamera(mouse, camera);
+					intersects = raycaster.intersectObject(particles);
+					if (intersects.length > 0) {
+						if (INTERSECTED != intersects[0].index) {
+							attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+							INTERSECTED = intersects[0].index;
+							attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
+							attributes.size.needsUpdate = true;
+						}
+					} else if (INTERSECTED !== null) {
+						attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
+						attributes.size.needsUpdate = true;
+						INTERSECTED = null;
+					}
+
+					renderer.render(scene, camera);
+				}
+			</script>
+
+</body>
+
+</html>

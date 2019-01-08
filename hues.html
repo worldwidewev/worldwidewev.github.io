@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>wev.world</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    body {
+      position: fixed !important;
+      overflow: hidden !important;
+      width: 100% !important;
+      height: 100% !important;
+
+      background-color: #000000;
+      margin: 0px;
+      overflow: hidden;
+      font-family: Monospace;
+      overflow: hidden !important;
+      font-size: 13px;
+      text-align: center;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    a {
+      color: #0078ff;
+    }
+
+    #overlay {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    #overlay>div {
+      text-align: center;
+    }
+
+    #overlay>div>button {
+      height: 20px;
+      width: 100px;
+      background: transparent;
+      color: #ffffff;
+      outline: 1px solid #ffffff;
+      border: 0px;
+      cursor: pointer;
+    }
+
+    #overlay>div>p {
+      color: #777777;
+      font-size: 12px;
+    }
+
+    #info {
+      color: #fff;
+      position: relative;
+      top: 0px;
+      width: 50em;
+      margin: 0 auto -2.1em;
+      padding: 5px;
+      z-index: 100;
+      ::-webkit-scrollbar {
+        display: none;
+      }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="overlay">
+    <div>
+      <button id="startButton">ENTER</button>
+      <p>welcome to wev</p>
+    </div>
+  </div>
+
+  <script src="js/three.js"></script>
+  <script src="js/DeviceOrientationControls.js"></script>
+  <script src="js/Group.js"></script>
+  <script src="js/CopyShader.js"></script>
+  <script src="js/BokehShader.js"></script>
+  <script src="js/OrbitControls.js"></script>
+  <script src="js/jquery-1.8.3.min.js"></script>
+  <script src="js/EffectComposer.js"></script>
+  <script src="js/RenderPass.js"></script>
+  <script src="js/ShaderPass.js"></script>
+  <script src="js/MaskPass.js"></script>
+  <script src="js/BokehPass.js"></script>
+  <script src="js/Detector.js"></script>
+  <script src="js/stats.min.js"></script>
+  <script src="js/p5.js"></script>
+  <script src="js/p5.sound.js"></script>
+  <script src="js/tween.min.js"></script>
+  <script src='js/dat.gui.min.js'></script>
+
+  <script>
+    if (!Detector.webgl) Detector.addGetWebGLMessage(); //webGL test
+
+    var startButton = document.getElementById('startButton'); //user interaction for audio playback
+    startButton.addEventListener('click', init);
+
+    var container, stats; //calling all variables, not defining. not sure if these need to be up here... ?
+    var audio, camera, controls, scene, group, renderer, domElement, uniforms,
+      materials = [],
+      objects = [],
+      singleMaterial, zmaterial = [],
+      parameters, i, j, k, h, color, x, y, z, s, n, nobjects, cubeMaterial;
+
+    var mouseX = 0,
+      mouseY = 0;
+
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    var postprocessing = {};
+
+    var startButton = document.getElementById('startButton');
+    startButton.addEventListener('click', init);
+
+
+    init(); //call init function
+    animate(); //call animate function
+
+    function init() {
+
+      var overlay = document.getElementById('overlay');
+      overlay.remove();
+
+      container = document.createElement('div');
+      document.body.appendChild(container);
+      document.body.ontouchmove = (e) => {
+        e.preventDefault;
+        return false;
+      };
+
+      //create scene
+      scene = new THREE.Scene();
+      scene.matrixAutoUpdate = false;
+
+      //create webGL renderer
+      renderer = new THREE.WebGLRenderer();
+
+      renderer.setPixelRatio(window.devicePixelRatio); //sets native pixel ratio
+      renderer.setSize(width, height);
+      container.appendChild(renderer.domElement);
+
+      var path = "img/";
+      var format = '.jpg';
+      var urls = [ //defines format for texture
+        path + 'px' + format, path + 'nx' + format,
+        path + 'py' + format, path + 'ny' + format,
+        path + 'pz' + format, path + 'nz' + format
+      ]; //this is a bracket because it closes up the array above
+
+
+      group = new THREE.Group(); //create group
+      scene.add(group);
+
+      //reflection in objects
+      var textureCube = new THREE.CubeTextureLoader().load(urls); //loads urls var called above this
+
+      var parameters = { //create environment map
+        color: 0xff1100,
+        envMap: textureCube
+      }; //these are colons because they are property initializers
+
+      var cubeMaterial = new THREE.MeshBasicMaterial(parameters); //creates material from environment map
+
+      singleMaterial = false;
+
+      if (singleMaterial) zmaterial = [cubeMaterial];
+
+      //create spheres
+      var geo = new THREE.SphereBufferGeometry(1, 20, 10);
+
+      var start = Date.now();
+
+      var xgrid = 14,
+        ygrid = 14,
+        zgrid = 14;
+
+      nobjects = xgrid * ygrid * zgrid;
+
+      var s = 60;
+      var count = 0;
+
+      for (i = 0; i < xgrid; i++) //for = loop,  (initialized value; statement, incrimental increase (++))
+        for (j = 0; j < ygrid; j++)
+          for (k = 0; k < zgrid; k++) {
+
+            var mesh;
+
+            if (singleMaterial) {
+
+              mesh = new THREE.Mesh(geo, zmaterial);
+
+            } else {
+
+              mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial(parameters));
+              materials[count] = mesh.material
+
+            }
+
+
+            x = 200 * (i - xgrid / 2); //these params set the position of objects on the grid
+            y = 200 * (j - ygrid / 2);
+            z = 200 * (k - zgrid / 2);
+
+            mesh.position.set(x, y, z);
+            mesh.scale.set(s, s, s);
+
+
+            mesh.matrixAutoUpdate = false;
+            mesh.updateMatrix();
+
+            group.add(mesh);
+
+
+            scene.add(group);
+            objects.push(group);
+
+
+            count++;
+
+          }
+      //create camera
+      camera = new THREE.PerspectiveCamera(70, width / height, 1, 3000);
+      camera.position.z = 200;
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+
+      controls.maxDistance = 1500;
+      controls.minDistance = 200;
+      controls.lookSpeed = 0.1;
+      controls.enablePan = false;
+
+      controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
+      controls.connect();
+
+      initPostprocessing(); //call function
+
+      renderer.autoClear = false;
+
+      document.addEventListener('mousemove', onDocumentMouseMove, false);
+      document.addEventListener('touchstart', onDocumentTouchStart, false);
+      document.addEventListener('touchmove', onDocumentTouchMove, false);
+
+      document.body.addEventListener("touchmove", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }, false); //look at syntax, function inside of values
+
+      window.addEventListener('resize', onWindowResize, false);
+
+      var effectController = { //dof post processing values
+
+        focus: 500.0,
+        aperture: 0.3,
+        maxblur: 0.15
+
+      };
+
+      var matChanger = function() { //variable value is a function, for bokeh
+
+        postprocessing.bokeh.uniforms["focus"].value = effectController.focus;
+        postprocessing.bokeh.uniforms["aperture"].value = effectController.aperture * 0.00001;
+        postprocessing.bokeh.uniforms["maxblur"].value = effectController.maxblur;
+
+      };
+
+      matChanger(); //call function
+    } //because its a one line statement i think
+
+    function onDocumentMouseMove(event) { //mousemove event
+
+      mouseX = event.clientX - windowHalfX;
+      mouseY = event.clientY - windowHalfY;
+
+    }
+
+    function onDocumentTouchStart(event) { //touch event
+
+      if (event.touches.length == 1) {
+
+        event.preventDefault();
+
+        mouseX = event.touches[0].pageX - windowHalfX;
+        mouseY = event.touches[0].pageY - windowHalfY;
+
+      }
+    }
+
+    function onDocumentTouchMove(event) { //touchmove event
+
+      if (event.touches.length == 1) {
+
+        event.preventDefault();
+
+        mouseX = event.touches[0].pageX - windowHalfX;
+        mouseY = event.touches[0].pageY - windowHalfY;
+
+      }
+
+    }
+
+    function onWindowResize() { //window resize event
+
+      windowHalfX = window.innerWidth / 2;
+      windowHalfY = window.innerHeight / 2;
+
+      width = window.innerWidth;
+      height = window.innerHeight;
+
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(width, height);
+      postprocessing.composer.setSize(width, height);
+
+    }
+
+    function initPostprocessing() { //post processing function
+      var renderPass = new THREE.RenderPass(scene, camera);
+
+      var bokehPass = new THREE.BokehPass(scene, camera, {
+        focus: 1.0,
+        aperture: 0.025,
+        maxblur: 1.0,
+
+        width: width,
+        height: height
+      }); //look at syntax, array inside of values for three.bokeh pass hence the });  this is not the end of this function
+
+      bokehPass.renderToScreen = true;
+
+      var composer = new THREE.EffectComposer(renderer);
+
+      composer.addPass(renderPass);
+      composer.addPass(bokehPass);
+
+      postprocessing.composer = composer;
+      postprocessing.bokeh = bokehPass;
+
+    } //end of this function
+
+    function animate() { //animate
+
+      requestAnimationFrame(animate, renderer.domElement);
+
+      controls.update()
+
+
+      render(); //call render function
+
+    }
+
+    function preload() { //preload music function, this is p5.js
+      song = loadSound('sounds/hues.mp3');
+    }
+
+    function setup() {
+      song.loop();
+
+      // create a new Amplitude analyzer
+      analyzer = new p5.Amplitude();
+
+      // Patch the input to an volume analyzer
+      analyzer.setInput(song);
+    }
+
+    function render() { //render function
+
+      var time = Date.now() * 0.00005; //clock
+
+      //old camera controls
+      //camera.position.x += ( mouseX - camera.position.x ) * 0.036;
+      //camera.position.y += ( - (mouseY) - camera.position.y ) * 0.036;
+
+
+      var rms = analyzer.getLevel();
+
+      renderer.render(scene, camera);
+
+        if (!singleMaterial) {
+        for (i = 0; i < nobjects; i++) { //if 0 is less than the number of spheres, which it will always be
+          //s = (3600 * (i / nobjects + time) % 36) / 360;
+          h = (45 * (i / 2 + time) % 360) / 180;
+          materials[i].color.setHSL(h, 1, rms + 0.3);
+        }
+
+        //sphere rotation
+        group.rotation.x += (rms * 0.01);
+        group.rotation.y += 0.0015;
+      }
+      //amount of post processing rendered ?
+      postprocessing.composer.render(0.1);
+    }
+  </script>
+</body>

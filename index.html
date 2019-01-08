@@ -456,23 +456,6 @@
 					}
 					os = new THREE.Mesh(geometry, material)
 
-					loader.load('models/presave.json', handle_load17);
-
-					function handle_load17(geometry, materials) {
-						var material = new THREE.MultiMaterial(materials);
-						material.morphTargets = true;
-
-						presave = new THREE.Mesh(geometry, material);
-						scene.add(presave);
-
-
-						presave.position.y = 17;
-						presave.position.z = -45;
-						presave.scale.set(1.25, 1.25, 1.25);
-
-					}
-					presave = new THREE.Mesh(geometry, material)
-
 					loader.load('models/WEV.json', handle_load11);
 
 					function handle_load11(geometry, materials) {

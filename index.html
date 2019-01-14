@@ -14,7 +14,7 @@
 			width: 100% !important;
 			height: 100% !important;
 
-			background-color: #000000;
+			background-color: #f0f0f0;
 			margin: 0px;
 			overflow: hidden;
 			font-family: Courier;
@@ -358,10 +358,10 @@
 						wevhead = new THREE.Mesh(geometry, material);
 						scene.add(wevhead);
 
-					//	DDDINK.addURL(wevhead, "https://distrokid.com/hyperfollow/wev/gbMx");
-					//	DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
-					//	DDDINK.readRendererObj(renderer, scene, camera);
-					//	DDDINK.domEvent.addFnc('Fn', 'A');
+						DDDINK.addURL(wevhead, "https://distrokid.com/hyperfollow/wev/gbMx");
+						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
+						DDDINK.readRendererObj(renderer, scene, camera);
+						DDDINK.domEvent.addFnc('Fn', 'A');
 
 						wevhead.position.y = 25;
 						wevhead.position.z = -150;
@@ -502,7 +502,7 @@
 						material.morphTargets = true;
 
 						presave = new THREE.Mesh(geometry, material);
-						//scene.add(presave);
+						scene.add(presave);
 
 
 						presave.position.y = 17;

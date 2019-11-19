@@ -59,40 +59,42 @@ THREE.DeviceOrientationControls = function(object) {
 
   this.connect = function() {
 
+    onScreenOrientationChangeEvent(); // run once on load
 
-    		onScreenOrientationChangeEvent(); // run once on load
+    if (scope.screenOrientation == 0) {
+      scope.offset = 1.5708;
+    }
 
-    		// iOS 13+
+    // iOS 13+
 
-    		if ( window.DeviceOrientationEvent !== undefined && typeof window.DeviceOrientationEvent.requestPermission === 'function' ) {
+		if ( window.DeviceOrientationEvent !== undefined && typeof window.DeviceOrientationEvent.requestPermission === 'function' ) {
 
-    			window.DeviceOrientationEvent.requestPermission().then( function ( response ) {
+			window.DeviceOrientationEvent.requestPermission().then( function ( response ) {
 
-    				if ( response == 'granted' ) {
+				if ( response == 'granted' ) {
 
-    					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-    					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
+					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
 
-    				}
+				}
 
-    			} ).catch( function ( error ) {
+			} ).catch( function ( error ) {
 
-    				console.error( 'THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:', error );
+				console.error( 'THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:', error );
 
-    			} );
+			} );
 
-    		} else {
+		} else {
 
-    			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-    			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
+			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
 
-    		}
+		}
 
-    		scope.enabled = true;
+		scope.enabled = true;
 
-    	};
+	};
 
-  };
 
   this.disconnect = function() {
 

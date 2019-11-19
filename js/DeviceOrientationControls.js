@@ -1,17 +1,3 @@
-/**
- * @author richt / http://richt.me
- * @author WestLangley / http://github.com/WestLangley
- *
- * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
- */
-
-import {
-	Euler,
-	Math as _Math,
-	Quaternion,
-	Vector3
-} from "js/three.js";
-
 var DeviceOrientationControls = function ( object ) {
 
 	var scope = this;
@@ -145,5 +131,3 @@ var DeviceOrientationControls = function ( object ) {
 	this.connect();
 
 };
-
-export { DeviceOrientationControls };

@@ -1,10 +1,3 @@
-/**
- * @author richt / http://richt.me
- * @author WestLangley / http://github.com/WestLangley
- *
- * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
- */
-
 THREE.DeviceOrientationControls = function(object) {
 
   var scope = this;
@@ -143,7 +136,8 @@ THREE.DeviceOrientationControls = function(object) {
             } else {
               setObjectQuaternion(scope.object.quaternion, alpha, beta, gamma, orient);
             }
-          
+
+          }
 
   };
 
@@ -156,3 +150,5 @@ THREE.DeviceOrientationControls = function(object) {
   this.connect();
 
 };
+
+export { DeviceOrientationControls };

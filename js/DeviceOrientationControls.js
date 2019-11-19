@@ -117,10 +117,7 @@ var DeviceOrientationControls = function ( object ) {
 
           }
 
-		}
-
-
-	};
+		};
 
 	this.dispose = function () {
 

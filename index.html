@@ -99,12 +99,12 @@
 </head>
 
 <body>
-
+	<div id="overlay">
+		<div>
+			<button id="startButton">ENTER</button>
+		</div>
+	</div>
 	<div id="container"></div>
-
-
-
-
 	<script src="js/three.js"></script>
 	<script src="js/3Dink.js"></script>
 	<script src="js/DeviceOrientationControls.js"></script>
@@ -136,10 +136,20 @@
 				var raycaster, intersects;
 				var coins = [];
 				var mouse, INTERSECTED;
+
+				var startButton = document.getElementById( 'startButton' );
+			startButton.addEventListener( 'click', function () {
+
 				init();
 				animate();
 
+					}, false );
+
 				function init() {
+
+					var overlay = document.getElementById( 'overlay' );
+					overlay.remove();
+
 					var container = document.getElementById('container');
 
 					scene = new THREE.Scene();
@@ -152,7 +162,7 @@
 
 					//lights
 					var light = new THREE.AmbientLight(0xffffff, 1);
-					scene.add(light); 
+					scene.add(light);
 
 					var light2 = new THREE.PointLight(0xffffff, 0.1);
 					scene.add(light2);

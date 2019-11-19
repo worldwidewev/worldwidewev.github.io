@@ -1,130 +1,126 @@
-var DeviceOrientationControls = function ( object ) {
+/**
+ * @author richt / http://richt.me
+ * @author WestLangley / http://github.com/WestLangley
+ *
+ * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
+ */
 
-	var scope = this;
+THREE.DeviceOrientationControls = function(object) {
 
-	this.object = object;
-	this.object.rotation.reorder( 'YXZ' );
+  var scope = this;
 
-	this.enabled = true;
+  this.object = object;
+  this.object.rotation.reorder('YXZ');
 
-	this.deviceOrientation = {};
-	this.screenOrientation = 0;
+  this.enabled = true;
 
-	this.alphaOffset = 0; // radians
+  this.deviceOrientation = {};
+  this.screenOrientation = 0;
 
-	var onDeviceOrientationChangeEvent = function ( event ) {
+  this.alphaOffset = 0; // radians
 
-		scope.deviceOrientation = event;
+  var onDeviceOrientationChangeEvent = function(event) {
 
-	};
+    scope.deviceOrientation = event;
 
-	var onScreenOrientationChangeEvent = function () {
+  };
 
-		scope.screenOrientation = window.orientation || 0;
+  var onScreenOrientationChangeEvent = function() {
 
-	};
+    scope.screenOrientation = window.orientation || 0;
 
-	// The angles alpha, beta and gamma form a set of intrinsic Tait-Bryan angles of type Z-X'-Y''
+  };
 
-	var setObjectQuaternion = function () {
+  // The angles alpha, beta and gamma form a set of intrinsic Tait-Bryan angles of type Z-X'-Y''
 
-		var zee = new Vector3( 0, 0, 1 );
+  var setObjectQuaternion = function() {
 
-		var euler = new Euler();
+    var zee = new THREE.Vector3(0, 0, 1);
 
-		var q0 = new Quaternion();
+    var euler = new THREE.Euler();
 
-		var q1 = new Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
+    var q0 = new THREE.Quaternion();
 
-		return function ( quaternion, alpha, beta, gamma, orient ) {
+    var q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
 
-			euler.set( beta, alpha, - gamma, 'YXZ' ); // 'ZXY' for the device, but 'YXZ' for us
+    return function(quaternion, alpha, beta, gamma, orient) {
 
-			quaternion.setFromEuler( euler ); // orient the device
+      euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
 
-			quaternion.multiply( q1 ); // camera looks out the back of the device, not the top
+      quaternion.setFromEuler(euler); // orient the device
 
-			quaternion.multiply( q0.setFromAxisAngle( zee, - orient ) ); // adjust for screen orientation
+      quaternion.multiply(q1); // camera looks out the back of the device, not the top
 
-		};
+      quaternion.multiply(q0.setFromAxisAngle(zee, -orient)); // adjust for screen orientation
 
-	}();
+    };
 
-	this.connect = function () {
+  }();
 
-		onScreenOrientationChangeEvent(); // run once on load
+  this.connect = function() {
 
-		// iOS 13+
+    onScreenOrientationChangeEvent(); // run once on load
 
-		if ( window.DeviceOrientationEvent !== undefined && typeof window.DeviceOrientationEvent.requestPermission === 'function' ) {
+    if (scope.screenOrientation == 0) {
+      scope.offset = 1.5708;
+    }
 
-			window.DeviceOrientationEvent.requestPermission().then( function ( response ) {
+    window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
+    window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
 
-				if ( response == 'granted' ) {
+    scope.enabled = true;
 
-					window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-					window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+  };
 
-				}
+  this.disconnect = function() {
 
-			} ).catch( function ( error ) {
+    window.removeEventListener('orientationchange', onScreenOrientationChangeEvent, false);
+    window.removeEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
 
-				console.error( 'THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:', error );
+    scope.enabled = false;
 
-			} );
+  };
 
-		} else {
+  this.mobilecheck = function() {
+        if (navigator.userAgent.match(/Android/i)) {
+          return true;
+        } else {
+          return false;
+        }
+      };
 
-			window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-			window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+  this.update = function() {
 
-		}
+    if (scope.enabled === false) return;
 
-		scope.enabled = true;
+    var device = scope.deviceOrientation;
 
-	};
+    if (device) {
 
-	this.disconnect = function () {
+      var alpha = device.alpha ? THREE.Math.degToRad(device.alpha) + scope.alphaOffset : 0; // Z
 
-		window.removeEventListener( 'orientationchange', onScreenOrientationChangeEvent, false );
-		window.removeEventListener( 'deviceorientation', onDeviceOrientationChangeEvent, false );
+      var beta = device.beta ? THREE.Math.degToRad(device.beta) : 0; // X'
 
-		scope.enabled = false;
+      var gamma = device.gamma ? THREE.Math.degToRad(device.gamma) : 0; // Y''
 
-	};
+      var orient = scope.screenOrientation ? THREE.Math.degToRad(scope.screenOrientation) : 0; // O
 
-	this.update = function () {
-
-		if ( scope.enabled === false ) return;
-
-		var device = scope.deviceOrientation;
-
-		if ( device ) {
-
-			var alpha = device.alpha ? _Math.degToRad( device.alpha ) + scope.alphaOffset : 0; // Z
-
-			var beta = device.beta ? _Math.degToRad( device.beta ) : 0; // X'
-
-			var gamma = device.gamma ? _Math.degToRad( device.gamma ) : 0; // Y''
-
-			var orient = scope.screenOrientation ? _Math.degToRad( scope.screenOrientation ) : 0; // O
 
       if (this.mobilecheck() == true) {
               setObjectQuaternion(scope.object.quaternion, alpha - scope.offset, beta, gamma, orient);
             } else {
               setObjectQuaternion(scope.object.quaternion, alpha, beta, gamma, orient);
             }
-
           }
 
-		};
+  };
 
-	this.dispose = function () {
+  this.dispose = function() {
 
-		scope.disconnect();
+    scope.disconnect();
 
-	};
+  };
 
-	this.connect();
+  this.connect();
 
 };

@@ -100,11 +100,13 @@
 
 <body>
 
+	<div id="overlay">
+	<div>
+		<button id="startButton">ENTER</button>
+	</div>
+</div>
+
 	<div id="container"></div>
-
-
-
-
 	<script src="js/three.js"></script>
 	<script src="js/3Dink.js"></script>
 	<script src="js/DeviceOrientationControls.js"></script>
@@ -136,8 +138,13 @@
 				var raycaster, intersects;
 				var coins = [];
 				var mouse, INTERSECTED;
+
+				var startButton = document.getElementById( 'startButton' );
+				startButton.addEventListener( 'click', function () {
 				init();
 				animate();
+
+					}, false );
 
 				function init() {
 					var container = document.getElementById('container');

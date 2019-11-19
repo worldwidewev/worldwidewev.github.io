@@ -14,7 +14,7 @@
 			width: 100% !important;
 			height: 100% !important;
 
-			background-color: #000000;
+			background-color: #f0f0f0;
 			margin: 0px;
 			overflow: hidden;
 			font-family: Courier;
@@ -358,7 +358,7 @@
 						wevhead = new THREE.Mesh(geometry, material);
 						scene.add(wevhead);
 
-						DDDINK.addURL(wevhead, "https://linktr.ee/worldwidewev");
+						DDDINK.addURL(wevhead, "https://distrokid.com/hyperfollow/wev/gbMx");
 						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
@@ -495,7 +495,7 @@
 					}
 					os = new THREE.Mesh(geometry, material)
 
-					loader.load('models/stream.json', handle_load17);
+					loader.load('models/presave.json', handle_load17);
 
 					function handle_load17(geometry, materials) {
 						var material = new THREE.MultiMaterial(materials);
@@ -589,7 +589,7 @@
 
 					var timer = Date.now() * 0.0005;
 
-					//wevhead.lookAt(camera.position);
+					//thecamera.lookAt(camera.position);
 
 
 					spotify.rotation.y += -0.05;

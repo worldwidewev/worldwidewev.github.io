@@ -128,7 +128,8 @@
 				if (WEBGL.isWebGLAvailable() === false) {
 					document.body.appendChild(WEBGL.getWebGLErrorMessage());
 				}
-
+				import { DeviceOrientationControls } from '/js/DeviceOrientationControls.js';
+				
 				var renderer, scene, camera, stats, controls;
 				var container, stats, clock, mixer;
 				var particles, uniforms;
@@ -221,7 +222,7 @@
 					};
 
 					if (window.mobilecheck() == true) {
-						controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
+						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
 					} else {
 						controls = new THREE.OrbitControls(camera, renderer.domElement);
 						controls.minPolarAngle = Math.PI / 2 - 0.2;

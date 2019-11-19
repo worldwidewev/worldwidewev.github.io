@@ -221,7 +221,7 @@
 					};
 
 					if (window.mobilecheck() == true) {
-						controls = new THREE.DeviceOrientationControls(camera, THREE.WebGLRenderer);
+						controls = new THREE.DeviceOrientationControls(camera, renderer.domElement);
 					} else {
 						controls = new THREE.OrbitControls(camera, renderer.domElement);
 						controls.minPolarAngle = Math.PI / 2 - 0.2;

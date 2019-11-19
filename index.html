@@ -242,7 +242,7 @@
 					var HEIGHT = window.innerHeight;
 					var mirrorgeometry = new THREE.PlaneBufferGeometry(35, 35);
 					var verticalMirror = new THREE.Reflector(mirrorgeometry, {
-						clipBias: 0.003,
+						clipBias: 0.05,
 						textureWidth: WIDTH * window.devicePixelRatio,
 						textureHeight: HEIGHT * window.devicePixelRatio,
 						color: 0x889999,

@@ -65,7 +65,14 @@ THREE.DeviceOrientationControls = function(object) {
       scope.offset = 1.5708;
     }
 
-    // iOS 13+
+    window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
+    window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
+
+    scope.enabled = true;
+
+
+
+		// iOS 13+
 
 		if ( window.DeviceOrientationEvent !== undefined && typeof window.DeviceOrientationEvent.requestPermission === 'function' ) {
 
@@ -95,6 +102,7 @@ THREE.DeviceOrientationControls = function(object) {
 
 	};
 
+  };
 
   this.disconnect = function() {
 

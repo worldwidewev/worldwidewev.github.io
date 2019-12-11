@@ -331,8 +331,8 @@
 					}
 					apple = new THREE.Mesh(geometry, material);
 
-					//googleplay
-					loader.load('models/googleplaycoin.json', handle_load4);
+					//bandcamp
+					loader.load('models/bandcamp.json', handle_load4);
 
 
 
@@ -340,21 +340,21 @@
 						var material = new THREE.MultiMaterial(materials);
 						material.morphTargets = true;
 
-						googleplay = new THREE.Mesh(geometry, material);
-						scene.add(googleplay);
+						bandcamp = new THREE.Mesh(geometry, material);
+						scene.add(bandcamp);
 
-						DDDINK.addURL(googleplay, "https://play.google.com/store/music/artist/wev?id=A4p35kupb7hb7jnavvq7a7fqjka");
+						DDDINK.addURL(bandcamp, "https://worldwidewev.bandcamp.com/");
 						DDDINK.domEvent.setGlobalLinkConfig('_self', 'ON', 'ON', 0xffffff);
 						DDDINK.readRendererObj(renderer, scene, camera);
 						DDDINK.domEvent.addFnc('Fn', 'A');
 
-						googleplay.position.x = -40;
-						googleplay.position.y = -8;
-						googleplay.position.z = -32;
-						googleplay.scale.set(1.75, 1.75, 1.75);
+						bandcamp.position.x = -40;
+						bandcamp.position.y = -8;
+						bandcamp.position.z = -32;
+						bandcamp.scale.set(1.5, 1.5, 1.5);
 					}
 
-					googleplay = new THREE.Mesh(geometry, material);
+					bandcamp = new THREE.Mesh(geometry, material);
 
 					//wevhead
 					loader.load('models/wevhead.json', handle_load5);
@@ -604,7 +604,7 @@
 
 					spotify.rotation.y += -0.05;
 					apple.rotation.y += -0.05;
-					googleplay.rotation.y += -0.05;
+					bandcamp.rotation.y += -0.05;
 					soundcloud.rotation.y += -0.05;
 					twitter.rotation.y += -0.05;
 					instagram.rotation.y += -0.05;
